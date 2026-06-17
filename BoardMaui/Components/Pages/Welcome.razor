@@ -1,0 +1,57 @@
+﻿@page "/welcome"
+@using BoardMaui.Extensions
+@using BoardMaui.Models
+
+@inject NavigationManager NavigationManager
+@inject AutoNavigation AutoNavigation
+
+<style>
+	.title {
+		font-size: @((3.75 * FontSize) + "vmin !important");
+	}
+
+	.minititle {
+		font-size: @((2.75 * FontSize) + "vmin !important");
+	}
+
+	.customtext {
+		font-size: @((1.75 * FontSize) + "vmin !important");
+	}
+
+	.hugetext {
+		font-size: @((7.5 * FontSize) + "vmin !important");
+	}
+
+	.body > tr > td {
+		font-size: @((2.5 * FontSize) + "vmin");
+	}
+
+	.body2 > tr > td {
+		font-size: @((2.25 * FontSize) + "vmin");
+	}
+</style>
+
+
+
+<table class="w-100 body">
+	<tr style="height: 60vmin;">
+		<td class="rounded-4 hugetext">
+			<b>
+				ברוכים הבאים לבית הכנסת
+				<br />
+				@MauiProgram.Synagogue.Settings.Title
+			</b>
+		</td>
+	</tr>
+</table>
+@code
+{
+	public double FontSize = 1 + MauiProgram.Synagogue.Settings.FontSize[nameof(Welcome)] * 0.1;
+	protected override async Task OnAfterRenderAsync(bool first)
+	{
+		await base.OnAfterRenderAsync(first);
+		if (first)
+			await AutoNavigation.AutoNavigateAsync(true, "welcome", "/praysboard");
+	}
+
+}

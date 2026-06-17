@@ -1,0 +1,97 @@
+﻿@using System.Text.Json
+@using BoardMaui
+@using BoardMaui.Extensions
+@using BoardMaui.Models
+
+@inject DatabaseUtility DatabaseUtility
+@page "/editmessages"
+
+<style>
+	* {
+		opacity: 1 !important;
+	}
+</style>
+<form>
+	<table class="w-100 body2">
+		<tr style="height: 60vmin;">
+			<td valign="top" class="rounded-4 shadow">
+				<table class="w-100">
+					<tr>
+						<td width="33%" valign="top">
+							<p class="minititle">
+								<b>עורך הודעות</b>
+							</p>
+							<hr />
+							<table class="w-100">
+								<tr>
+									<td class="w-25">כותרת:</td>
+									<td width="75%">
+										<input type="text" @bind="title" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">תוכן:</td>
+									<td width="75%">
+										<textarea cols="40" rows="10" @bind="message"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<input value="הוסף" type="reset" @onclick="Add" />
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td class="w-66" valign="top">
+							<p class="minititle">
+								<b>רשימה</b>
+							</p>
+							<hr />
+							@foreach (var message in MauiProgram.Synagogue.Messages ?? [])
+							{
+								<table class="w-100">
+									<tr>
+										<td width="33%">@message.Title</td>
+										<td width="33%">@message.Body</td>
+										<td width="33%">
+											<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.Messages, message)" />
+										</td>
+									</tr>
+								</table>
+								<hr />
+							}
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>
+
+@code {
+		string? title;
+		string? message;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.CurrentPage = null;
+		MauiProgram.Synagogue.Messages ??= new();
+	}
+	public async Task Add()
+	{
+		MauiProgram.Synagogue.Messages?.Add(new Message() { Title = title, Body = message });
+		title = null;
+		message = null;
+		await DatabaseUtility.SaveAll();
+	}
+
+	public async Task RemoveFromList(int? i)
+	{
+		if (i.HasValue)
+		{
+			MauiProgram.Synagogue.Messages?.RemoveAt(i.Value);
+			await DatabaseUtility.SaveAll();
+		}
+	}
+}

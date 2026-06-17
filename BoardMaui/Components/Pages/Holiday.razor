@@ -1,0 +1,77 @@
+﻿@using System.Text.Json;
+@using BoardMaui.Extensions
+@using BoardMaui.Models
+
+@inject NavigationManager NavigationManager
+@inject DatabaseUtility DatabaseUtility
+@inject AutoNavigation AutoNavigation
+
+@page "/holiday"
+<style>
+	.title {
+		font-size: @((3.75 * FontSize) + "vmin !important");
+	}
+
+	.minititle {
+		font-size: @((2.75 * FontSize) + "vmin !important");
+	}
+
+	.customtext {
+		font-size: @((1.75 * FontSize) + "vmin !important");
+	}
+
+	.hugetext {
+		font-size: @((7.5 * FontSize) + "vmin !important");
+	}
+
+	.body > tr > td {
+		font-size: @((2.5 * FontSize) + "vmin");
+	}
+
+	.body2 > tr > td {
+		font-size: @((2.25 * FontSize) + "vmin");
+	}
+
+</style>
+
+<table class="rounded-4 body m-auto w-33">
+	<tr>
+		<td colspan="2">
+			<p class="minititle">
+				<b>@MauiProgram.Synagogue.Settings.CurrentHoliday</b>
+			</p>
+			<hr />
+		</td>
+	</tr>
+	@for (int i = 0; i < MauiProgram.Synagogue.HolidayPrays?.Count; i++)
+	{
+		<tr>
+			<td class="w-50">
+				@MauiProgram.Synagogue.HolidayPrays?[i].Title
+			</td>
+			<td class="w-50">
+
+				@MauiProgram.Synagogue.HolidayPrays?[i].Time
+
+
+			</td>
+
+		</tr>
+	}
+</table>
+@code
+{
+	public double FontSize = 1 + MauiProgram.Synagogue.Settings.FontSize[nameof(Holiday)] * 0.1;
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.Synagogue.HolidayPrays ??= new();
+	}
+	protected override async Task OnAfterRenderAsync(bool first)
+	{
+		await base.OnAfterRenderAsync(first);
+		if (first)
+			await AutoNavigation.AutoNavigateAsync(MauiProgram.Synagogue.Settings.IsHoliday, "holiday", "/events");
+	}
+	
+}

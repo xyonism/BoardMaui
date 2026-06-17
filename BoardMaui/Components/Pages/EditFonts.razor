@@ -1,0 +1,84 @@
+﻿@using System.Text.Json
+@using BoardMaui.Extensions
+
+@inject DatabaseUtility DatabaseUtility
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+@page "/editfonts"
+<style>
+	*
+	{
+		opacity: 1 !important;
+	}
+</style>
+<table class="w-100">
+	<tr style="height: 60vmin;">
+		<td valign="top" class="rounded-4 shadow">
+			<p class="minititle">
+				<b>פונטים</b>
+			</p>
+			<hr />
+			<table class="w-100 body">
+				<tr>
+					<td>
+						עמוד ראשי:
+					</td>
+					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Home)]) /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>תרומות:</td>
+					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Donations)]) /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>הודעות:</td>
+					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Messages)]) /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>אירועים:</td>
+					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Events)]) /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>ימים מיוחדים:</td>
+					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Holiday)]) /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>לוח תפילות:</td>
+					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(PraysBoard)]) /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>עילוי נשמות:</td>
+					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(RIP)]) /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>ברוכים הבאים:</td>
+					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Welcome)]) /></td>
+					<td></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	<tr>
+		<td colspan="3"><input value="שמור הכל" type="button" @onclick="SaveList" /></td>
+	</tr>
+</table>
+@code {
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.CurrentPage = null;
+	}
+
+	public async Task SaveList()
+	{
+		await DatabaseUtility.SaveAll();
+		NavigationManager.Refresh(true);
+	}
+}

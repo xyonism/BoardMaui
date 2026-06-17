@@ -1,0 +1,344 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject AutoNavigation AutoNavigation
+@using System.Text.Json
+@using BoardMaui.Extensions
+@using BoardMaui.Models
+
+<style>
+	.title {
+		font-size: @((3.75 * FontSize) + "vmin !important");
+	}
+
+	.minititle {
+		font-size: @((2.75 * FontSize) + "vmin !important");
+	}
+
+	.customtext {
+		font-size: @((1.75 * FontSize) + "vmin !important");
+	}
+
+	.hugetext {
+		font-size: @((7.5 * FontSize) + "vmin !important");
+	}
+
+	.body > tr > td {
+		font-size: @((2.5 * FontSize) + "vmin");
+	}
+
+	.body2 > tr > td {
+		font-size: @((2.25 * FontSize) + "vmin");
+	}
+</style>
+
+<table class="w-100 body">
+	<tr class="w-100" style="height: 60vmin;">
+		<td valign="top" class="rounded-4 shadow w-33 p-5">
+			<p class="title">
+				<b>זמני היום:</b>
+				<hr />
+			</p>
+			<table class="w-100 m-0">
+				<tr>
+					<td class="w-50 text-start">
+						עלות השחר
+					</td>
+					<td class="w-50 text-end">
+						@TimeOnly.FromDateTime(MauiProgram.Calendar.GetAlosHashachar())
+					</td>
+				</tr>
+				<tr>
+					<td class="w-50 text-start">
+						הנץ החמה
+					</td>
+					<td class="w-50 text-end">
+						@TimeOnly.FromDateTime(MauiProgram.Calendar.GetSunrise())
+					</td>
+				</tr>
+				<tr>
+					<td class="w-50 text-start">
+						סוף זמן ק"ש
+					</td>
+					<td class="w-50 text-end">
+						@TimeOnly.FromDateTime(MauiProgram.Calendar.GetSofZmanShmaGRA())
+					</td>
+				</tr>
+				<tr>
+					<td class="w-50 text-start">
+						חצות היום
+					</td>
+					<td class="w-50 text-end">
+						@TimeOnly.FromDateTime(MauiProgram.Calendar.GetChatzos())
+					</td>
+				</tr>
+				<tr>
+					<td class="w-50 text-start">
+						מנחה גדולה
+					</td>
+					<td class="w-50 text-end">
+						@TimeOnly.FromDateTime(MauiProgram.Calendar.GetMinchaGedola())
+					</td>
+				</tr>
+				<tr>
+					<td class="w-50 text-start">
+						פלג המנחה
+					</td>
+					<td class="w-50 text-end">
+						@TimeOnly.FromDateTime(MauiProgram.Calendar.GetPlagHamincha())
+					</td>
+				</tr>
+				<tr>
+					<td class="w-50 text-start">
+						שקיעה
+					</td>
+					<td class="w-50 text-end">
+						@TimeOnly.FromDateTime(MauiProgram.Calendar.GetSunset())
+					</td>
+				</tr>
+				<tr>
+					<td class="w-50 text-start">
+						צאת הכוכבים
+					</td>
+					<td class="w-50 text-end">
+						@TimeOnly.FromDateTime(MauiProgram.Calendar.GetSunset()).AddMinutes(13.5)
+					</td>
+				</tr>
+			</table>
+
+
+		</td>
+		<td valign="top" class="rounded-4 shadow w-33 m-auto p-0 justify-content-center overflow-hidden p-5" style="max-height: 60vmin">
+			<div class="w-100 p-0 m-auto d-flex justify-content-center align-items-center scroll-table" style="max-height: 60vmin">
+				@* <p class="title">
+					<b>זמני התפילה:</b>
+					<hr />
+				</p> *@
+				<table class="w-100 p-0">
+					@if (MauiProgram.Synagogue.ShaharitPrays?.Any() ?? false)
+					{
+						<tr>
+							<td colspan="2" class="minititle text-center fw-bold">
+								שחרית
+								<hr />
+							</td>
+						</tr>
+
+						@foreach (var pray in MauiProgram.Synagogue.ShaharitPrays ?? [])
+						{
+							<tr>
+								<td class="w-75 text-start">
+									@pray.DayOfWeek - @pray.Title
+								</td>
+								<td class="w-25 text-end">
+									@if (pray.Dynamic)
+									{
+										try
+										{
+											@TimeOnly.FromDateTime(MauiProgram.Calendar?.GetSunrise() ?? new()).Add(pray.Time.GetValueOrDefault().ToTimeSpan())
+										}
+										catch
+										{
+											@TimeOnly.FromDateTime(MauiProgram.Calendar?.GetSunrise() ?? new())
+										}
+									}
+									else
+									{
+										@pray.Time
+									}
+								</td>
+							</tr>
+						}
+
+					}
+
+					@if (MauiProgram.Synagogue.MinhaPrays?.Any() ?? false)
+					{
+
+						<tr>
+							<td colspan="2" class="minititle text-center fw-bold">
+								מנחה
+								<hr />
+							</td>
+						</tr>
+
+
+						@foreach (var pray in MauiProgram.Synagogue.MinhaPrays ?? [])
+						{
+							<tr>
+								<td class="w-75 text-start">
+									@pray.DayOfWeek - @pray.Title
+								</td>
+								<td class="w-25 text-end">
+									@if (pray.Dynamic)
+									{
+										try
+										{
+											@TimeOnly.FromDateTime(MauiProgram.Calendar?.GetSunset() ?? new()).Add(pray.Time.GetValueOrDefault().ToTimeSpan())
+										}
+										catch
+										{
+											@TimeOnly.FromDateTime(MauiProgram.Calendar?.GetSunset() ?? new())
+										}
+									}
+									else
+									{
+										@pray.Time
+									}
+								</td>
+							</tr>
+						}
+
+					}
+
+					@if (MauiProgram.Synagogue.ArvitPrays?.Any() ?? false)
+					{
+						<tr>
+							<td colspan="2" class="minititle text-center fw-bold">
+								ערבית
+								<hr />
+							</td>
+						</tr>
+
+
+
+						@foreach (var pray in MauiProgram.Synagogue.ArvitPrays ?? [])
+						{
+							<tr>
+								<td class="w-75 text-start">
+									@pray.DayOfWeek - @pray.Title
+								</td>
+								<td class="w-25 text-end">
+									@if (pray.Dynamic)
+									{
+										try
+										{
+											@TimeOnly.FromDateTime(MauiProgram.Calendar?.GetSunset() ?? new()).AddMinutes(13.5).Add(pray.Time.GetValueOrDefault().ToTimeSpan())
+										}
+										catch
+										{
+											@TimeOnly.FromDateTime(MauiProgram.Calendar?.GetSunset() ?? new()).AddMinutes(13.5)
+										}
+									}
+									else
+									{
+										@try
+										{
+											@pray.Time
+										}
+										catch
+										{
+
+										}
+									}
+								</td>
+							</tr>
+						}
+					}
+				</table>
+
+			</div>
+		</td>
+		<td class="rounded-4 shadow w-33 p-5">
+			@try
+			{
+				@if (!String.IsNullOrEmpty(jewishCalendar?.GetParshah(DateTime.Today.AddDays(-1))))
+				{
+					<p class="title">
+						<b>פרשה:</b>
+					</p>
+					<p class="minititle">
+						@jewishCalendar.GetParshah(DateTime.Today.AddDays(-1))
+					</p>
+
+					@if ((int)System.DateTime.UtcNow.DayOfWeek == 5 || (int)System.DateTime.UtcNow.DayOfWeek == 6)
+					{
+						<hr />
+						<p><b>כניסת שבת: </b>@TimeOnly.FromDateTime(MauiProgram.Calendar?.GetSunset() ?? new()).AddMinutes(-21)</p>
+						<p><b>צאת שבת: </b>@TimeOnly.FromDateTime(MauiProgram.Calendar?.GetSunset() ?? new()).AddMinutes(33.5)</p>
+					}
+					<hr />
+				}
+			}
+			catch
+			{
+			}
+
+			<p class="title">
+				<b>דף יומי:</b>
+			</p>
+			<p class="minititle">
+				@jewishCalendar?.GetDafYomiBavli(DateTime.Today).Masechta @Gematriya.DoGematriya(jewishCalendar?.GetDafYomiBavli(DateTime.Today).Page ?? 0)
+			</p>
+			@if (jewishCalendar?.GetDayOfChanukah(DateTime.Today) != -1)
+			{
+				<hr />
+				<p class="title">
+					<b>
+
+						@if (TimeOnly.FromDateTime(DateTime.Parse($"{MauiProgram.Calendar?.GetSunset()}").AddMinutes(13.5)) < TimeOnly.FromDateTime(DateTime.UtcNow))
+						{
+							@(Gematriya.DoGematriya(jewishCalendar?.GetDayOfChanukah(DateTime.Today) ?? 0) + " נרות חנוכה")
+						}
+						else
+						{
+							@(Gematriya.DoGematriya(jewishCalendar?.GetDayOfChanukah(DateTime.Today) ?? 0) + " נרות חנוכה")
+						}
+
+					</b>
+				</p>
+			}
+			@if (jewishCalendar?.GetDayOfOmer(DateTime.Today) != -1)
+			{
+
+				<hr />
+				<p class="title">
+					<b>
+						@if (TimeOnly.FromDateTime(DateTime.Parse($"{MauiProgram.Calendar?.GetSunset()}").AddMinutes(13.5)) < TimeOnly.FromDateTime(DateTime.UtcNow))
+						{
+							@(jewishCalendar?.GetDayOfOmer(DateTime.Today.AddDays(1)) + " ימים לעומר")
+						}
+						else
+						{
+							@(jewishCalendar?.GetDayOfOmer(DateTime.Today) + " ימים לעומר")
+						}
+
+					</b>
+				</p>
+			}
+			@if (jewishCalendar?.GetJewishHoliday(DateTime.Today, true) != Zmanim.JewishCalendar.JewishCalendar.JewishHoliday.אין)
+			{
+				<hr />
+				<p class="title"><b>@jewishCalendar?.GetJewishHoliday(DateTime.Today, true).ToString().Replace("_", " ")</b></p>
+			}
+			@if (curDay == 30 || curDay == 1)
+			{
+				<hr />
+				<p class="title"><b>ראש חודש</b></p>
+			}
+
+		</td>
+	</tr>
+</table>
+
+
+@code
+{
+	public double FontSize = 1 + MauiProgram.Synagogue.Settings.FontSize[nameof(Home)] * 0.1;
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.Synagogue.ShaharitPrays ??= new();
+		MauiProgram.Synagogue.MinhaPrays ??= new();
+		MauiProgram.Synagogue.ArvitPrays ??= new();
+	}
+	int curDay = (new System.Globalization.HebrewCalendar()).GetDayOfMonth(DateTime.Today);
+	Zmanim.JewishCalendar.JewishCalendar? jewishCalendar = new Zmanim.JewishCalendar.JewishCalendar();
+
+	protected override async Task OnAfterRenderAsync(bool first)
+	{
+		await base.OnAfterRenderAsync(first);
+		if (first)
+			await AutoNavigation.AutoNavigateAsync(true, "home", "/welcome");
+	}
+
+}

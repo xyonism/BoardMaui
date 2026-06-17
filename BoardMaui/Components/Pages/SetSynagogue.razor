@@ -1,0 +1,102 @@
+﻿@using System.Text.Json
+@using BoardMaui.Extensions
+@using QRCoder
+@inject IJSRuntime JS
+
+@inject DatabaseUtility DatabaseUtility
+@inject NavigationManager NavigationManager
+@page "/setsynagogue"
+<style>
+	*
+	{
+		opacity: 1 !important;
+	}
+</style>
+<table class="w-100">
+	<tr style="height: 60vmin;">
+		<td valign="top" class="rounded-4 shadow">
+			<p class="minititle">
+				<b>הגדרת בית כנסת</b>
+			</p>
+			<hr />
+			<table class="w-100 body">
+				<tr>
+					<td colspan=2>
+						מזהה בית כנסת:
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input class="text-center" style="direction: ltr !important; width: 100%; font-family: system-ui !important;" type="text" @bind="MauiProgram.Synagogue.Guid" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input value="שמור הכל" type="button" @onclick="Save" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input value="צור QR Code" type="button" @onclick="GenerateQrCode" />
+					</td>
+				</tr>
+				@if (!string.IsNullOrEmpty(qrImageData))
+				{
+					<tr>
+						<td>
+							<img src="@qrImageData" class="mt-3" style="max-width: 300px;" />
+						</td>
+					</tr>
+				}
+				<tr>
+					<td>
+						<div id="reader" style="width: 300px;"></div>
+						<input type="button" value="סרוק QR" @onclick="StartScan">
+					</td>
+				</tr>
+
+			</table>
+		</td>
+	</tr>
+</table>
+
+@code {
+	string qrImageData;
+
+
+	async Task GenerateQrCode()
+	{
+		var generator = new QRCodeGenerator();
+		var data = generator.CreateQrCode(MauiProgram.Synagogue.Guid, QRCodeGenerator.ECCLevel.Q);
+		var qrCode = new PngByteQRCode(data);
+		var pngBytes = qrCode.GetGraphic(20);
+		qrImageData = $"data:image/png;base64,{Convert.ToBase64String(pngBytes)}";
+	}
+
+	async Task StartScan()
+	{
+		await JS.InvokeVoidAsync("startQrScanner", DotNetObjectReference.Create(this));
+	}
+
+	[JSInvokable]
+	public Task SetScanResult(string result)
+	{
+		MauiProgram.Synagogue.Guid = result;
+		return Task.CompletedTask;
+	}
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.CurrentPage = null;
+	}
+
+	public async Task Save()
+	{
+		if (!string.IsNullOrEmpty(MauiProgram.Synagogue.Guid))
+		{
+			Preferences.Set("Synagogue.Guid", MauiProgram.Synagogue.Guid);
+			await MauiProgram.LoadSynagogueDataAsync();
+			NavigationManager.Refresh(true);
+		}
+	}
+}

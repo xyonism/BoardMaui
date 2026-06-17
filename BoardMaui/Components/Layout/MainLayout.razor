@@ -1,0 +1,90 @@
+﻿@using BoardMaui.Extensions
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@using Microsoft.Maui.Controls.Platform;
+@using Microsoft.Maui.Controls.Compatibility;
+
+<style>
+	.head > tr > td {
+		font-size: @((5.75 * (1 + MauiProgram.Synagogue.Settings.FontIncrease * 0.1)) + "vmin");
+	}
+</style>
+<NavMenu />
+
+<header>
+	<table class="head w-100 m-auto" style="height: 20vmin">
+		<tr>
+			<td class="rounded-4 shadow" width="40%"><b>@day</b></td>
+
+			<td class="rounded-pill shadow" width="20%"><b>@TimeOnly.FromDateTime(DateTime.UtcNow)</b></td>
+
+			<td class="rounded-4 shadow" width="40%"><b>@hc</b></td>
+		</tr>
+	</table>
+</header>
+<main>
+
+	@Body
+</main>
+<footer class="bg-light w-100" style="position: fixed;left: 0;bottom: 0;">
+	<table class="w-100 footer-custom">
+		<tr>
+			@if (!String.IsNullOrEmpty(MauiProgram.Synagogue.Settings.Dedication))
+			{
+				<td class="text-center w-33">
+					<b>@MauiProgram.Synagogue.Settings.Dedication</b>
+				</td>
+			}
+			<td class="text-center w-33" style="font-family: system-ui !important; direction: ltr !important;">
+				☎️ 054-826-6522
+			</td>
+			<td class="text-center w-33" style="font-family: system-ui !important; direction: ltr !important;">
+				Ver: @VersionTracking.Default.CurrentVersion.@VersionTracking.Default.CurrentBuild
+			</td>
+		</tr>
+	</table>
+
+</footer>
+
+
+@code
+{
+
+	public string? time;
+	public string? hc;
+	public string? day;
+	protected override void OnParametersSet()
+	{
+
+		DeviceDisplay.Current.KeepScreenOn = true;
+		System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("he-IL");
+		try
+		{
+			day = (TimeOnly.FromDateTime(DateTime.Parse($"{MauiProgram.Calendar?.GetSunset()}").AddMinutes(13.5)) < TimeOnly.FromDateTime(DateTime.UtcNow)) ? culture.DateTimeFormat.GetDayName(DateTime.Today.AddDays(1).DayOfWeek).Replace("יום", "ליל") : culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+		}
+		catch
+		{
+			day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+		}
+		System.Globalization.HebrewCalendar HebCal = new System.Globalization.HebrewCalendar();
+		int hebrewMonth = HebCal.GetMonth(DateTime.Today);
+		bool isLeapYear = HebCal.IsLeapYear(HebCal.GetYear(DateTime.Today));
+
+		// Define month names, adjusting for leap year
+		string[] hebrewMonths = isLeapYear ?
+			new string[] { "", "תשרי", "חשוון", "כסלו", "טבת", "שבט", "אדר א", "אדר ב", "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול" } :
+			new string[] { "", "תשרי", "חשוון", "כסלו", "טבת", "שבט", "אדר", "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול" };
+
+		// Construct the date string
+		hc = Gematriya.DoGematriya(HebCal.GetDayOfMonth(DateTime.Today)) + " ";
+		if (hebrewMonth >= 1 && hebrewMonth < hebrewMonths.Length)
+		{
+			hc += hebrewMonths[hebrewMonth];
+		}
+		else
+		{
+			hc += "Unknown Month"; // Fallback for unexpected month values
+		}
+	}
+
+}

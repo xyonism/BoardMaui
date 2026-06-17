@@ -1,0 +1,196 @@
+﻿@using System.Text.Json
+@using BoardMaui.Extensions
+
+@inject DatabaseUtility DatabaseUtility
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+@page "/settings"
+<style>
+	* {
+		opacity: 1 !important;
+	}
+</style>
+<table class="w-100">
+	<tr style="height: 60vmin;">
+		<td valign="top" class="rounded-4 shadow">
+			<p class="minititle">
+				<b>הגדרות</b>
+			</p>
+			<hr />
+			<table class="w-100 body">
+
+				<tr>
+					<td>זמן מעבר:</td>
+					<td><input min="1" max="60" type="number" @bind="MauiProgram.Synagogue.Settings.TransitionTime" /></td>
+					<td>שניות</td>
+				</tr>
+				<tr>
+					<td>הגדלת גודל טקסט:</td>
+					<td><input min="-10" max="10" type="number" @bind="MauiProgram.Synagogue.Settings.FontIncrease" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>שם בית כנסת:</td>
+					<td><input type="text" @bind="MauiProgram.Synagogue.Settings.Title" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>תמונת רקע:</td>
+					<td>
+						<label for="browse"
+							   @onclick="async x => await ProcessCapturedPhoto((await Microsoft.Maui.Media.MediaPicker.PickPhotosAsync(new Microsoft.Maui.Media.MediaPickerOptions { MaximumWidth = Convert.ToInt32(DeviceDisplay.MainDisplayInfo.Width), MaximumHeight = Convert.ToInt32(DeviceDisplay.MainDisplayInfo.Height), SelectionLimit = 1 })).FirstOrDefault())">
+							<svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="currentColor">
+								<path d="M653.33-493.33v-224H720v224h-66.67ZM433.33-250q-29-11.33-47.83-37.31-18.83-25.98-18.83-60.02v-370h66.66V-250ZM472-80q-103.45 0-176.06-72t-72.61-175.33V-704q0-73.33 51.84-124.67Q327-880 400-880t124.83 51.33q51.84 51.34 51.84 124.67V-373.33H510V-704q-.33-46-32.17-77.67-31.83-31.66-77.97-31.66t-78 31.7Q290-749.92 290-704v376.67q-.33 75.66 52.98 128.16 53.31 52.5 129.02 52.5 33 0 62.17-10.83 29.16-10.83 52.5-30.5v79Q561-95 532.17-87.5 503.33-80 472-80Zm181.33-40v-120h-120v-66.67h120v-120H720v120h120V-240H720v120h-66.67Z" />
+							</svg>
+							בחר תמונת רקע
+						</label>
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>הקדשה:</td>
+					<td><input type="text" @bind="MauiProgram.Synagogue.Settings.Dedication" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>אפשר לעילוי נשמת:</td>
+					<td><input type="checkbox" @bind="MauiProgram.Synagogue.Settings.ShowRIP" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>אפשר אירועים:</td>
+					<td><input type="checkbox" @bind="MauiProgram.Synagogue.Settings.ShowEvents" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>אפשר תרומות:</td>
+					<td><input type="checkbox" @bind="MauiProgram.Synagogue.Settings.ShowDonations" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>אפשר לוח תפילות שבועי:</td>
+					<td><input type="checkbox" @bind="MauiProgram.Synagogue.Settings.ShowPraysBoard" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>אפשר ימים מיוחדים:</td>
+					<td><input type="checkbox" @bind="MauiProgram.Synagogue.Settings.IsHoliday" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>אפשר הודעות:</td>
+					<td><input type="checkbox" @bind="MauiProgram.Synagogue.Settings.ShowMessages" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>
+						קורדינטות:<br />שם עיר:
+						<input type="text" @bind="address" />
+						<input value="אתר מיקום" type="button" @onclick="GetLocation" />
+						<br />
+						<input value="אתר מיקום אחרון" type="button" @onclick="GetCachedLocation" />
+						<br />
+						<input value="אתר מיקום נוכחי" type="button" @onclick="GetCurrentLocation" />
+					</td>
+					<td>
+						<input type="number" @bind="MauiProgram.Synagogue.Settings.Latitude" />
+						<br />
+						<input type="number" @bind="MauiProgram.Synagogue.Settings.Longitude" />
+					</td>
+					<td>
+						Latitude (lat)
+						<br />
+						Longitude (lng)
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3"><input value="שמור הכל" type="button" @onclick="SaveList" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+@code {
+
+	private async Task ProcessCapturedPhoto(Microsoft.Maui.Storage.FileResult? capturedPhoto)
+	{
+
+		if (capturedPhoto == null)
+			return;
+
+		try
+		{
+
+
+			using var photoStream = await capturedPhoto.OpenReadAsync();
+			using var memoryStream = new MemoryStream();
+			await photoStream.CopyToAsync(memoryStream);
+			memoryStream.Position = 0;
+			var image = $"data:{capturedPhoto.ContentType};base64,{Convert.ToBase64String(memoryStream.ToArray())}";
+			await JS.InvokeAsync<object>("localStorage.setItem", "backgroundImage", image);
+		}
+		catch
+		{
+			
+		}
+	}
+
+
+	string? address;
+	string? Longitude = MauiProgram.Synagogue.Settings.Latitude.ToString();
+	string? Latitude = MauiProgram.Synagogue.Settings.Longitude.ToString();
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.CurrentPage = null;
+	}
+
+	public async Task GetLocation()
+	{
+		try
+		{
+			Location? location = (await Geocoding.Default.GetLocationsAsync(address ?? "")).FirstOrDefault();
+			if (location != null)
+			{
+				MauiProgram.Synagogue.Settings.Latitude = location.Latitude;
+				MauiProgram.Synagogue.Settings.Longitude = location.Longitude;
+			}
+			await SaveList();
+		}
+		catch { }
+	}
+	public async Task GetCachedLocation()
+	{
+		try
+		{
+			var location = await Geolocation.Default.GetLastKnownLocationAsync();
+			if (location != null)
+			{
+				MauiProgram.Synagogue.Settings.Latitude = location.Latitude;
+				MauiProgram.Synagogue.Settings.Longitude = location.Longitude;
+			}
+			await SaveList();
+		}
+		catch { }
+	}
+	public async Task GetCurrentLocation()
+	{
+		try
+		{
+			var location = await Geolocation.Default.GetLocationAsync();
+			if (location != null)
+			{
+				MauiProgram.Synagogue.Settings.Latitude = location.Latitude;
+				MauiProgram.Synagogue.Settings.Longitude = location.Longitude;
+			}
+			await SaveList();
+		}
+		catch { }
+	}
+	public async Task SaveList()
+	{
+		await DatabaseUtility.SaveAll();
+		NavigationManager.NavigateTo("/settings", true);
+	}
+}

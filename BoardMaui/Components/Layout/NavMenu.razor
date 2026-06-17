@@ -1,0 +1,87 @@
+﻿@attribute [StreamRendering]
+@page "/navmenu"
+@inject NavigationManager NavigationManager
+
+
+<nav class="menu-container w-100" style="text-align: right !important;">
+	<div class="d-flex justify-content-around menu">
+		<div class="nav-item">
+			<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/", true))" href="#">ראשי</NavLink>
+		</div>
+		<div class="nav-item">
+			<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/welcome", true))" href="#">ברוכים הבאים</NavLink>
+		</div>
+		@if (MauiProgram.Synagogue.Settings.IsHoliday)
+		{
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/editholiday", true))" href="#">עורך ימים מיוחדים</NavLink>
+			</div>
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/holiday", true))" href="#">ימים מיוחדים</NavLink>
+			</div>
+		}
+		@if (MauiProgram.Synagogue.Settings.ShowEvents)
+		{
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/editevents", true))" href="#">עורך אירועים</NavLink>
+			</div>
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/events", true))" href="#">אירועים</NavLink>
+			</div>
+		}
+		@if (MauiProgram.Synagogue.Settings.ShowRIP)
+		{
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/editrip", true))" href="#">עורך עילוי נשמות</NavLink>
+			</div>
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/rip", true))" href="#">עילוי נשמות</NavLink>
+			</div>
+		}
+		@if (MauiProgram.Synagogue.Settings.ShowDonations)
+		{
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/editdonations", true))" href="#">עורך תרומות</NavLink>
+			</div>
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/donations", true))" href="#">תרומות</NavLink>
+			</div>
+		}
+		<div class="nav-item">
+			<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/editprays", true))" href="#">עורך תפילות</NavLink>
+		</div>
+
+		@if (MauiProgram.Synagogue.Settings.ShowPraysBoard)
+		{
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/praysboard", true))" href="#">לוח תפילות שבועי</NavLink>
+			</div>
+		}
+		@if (MauiProgram.Synagogue.Settings.ShowMessages)
+		{
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/editmessages", true))" href="#">עורך הודעות</NavLink>
+			</div>
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/messages", true))" href="#">הודעות</NavLink>
+			</div>
+		}
+		<div class="nav-item">
+
+			<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/settings", true))" href="#">הגדרות</NavLink>
+
+		</div>
+		<div class="nav-item">
+			<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/setsynagogue", true))" href="#">הגדרת בית כנסת</NavLink>
+		</div>
+		<div class="nav-item">
+			<NavLink class="nav-link" @onclick="@(x => NavigationManager.NavigateTo("/editfonts", true))" href="#">פונטים</NavLink>
+		</div>
+		@if (Application.Current != null)
+		{
+			<div class="nav-item">
+				<NavLink class="nav-link" @onclick="Application.Current.Quit" href="#">יציאה</NavLink>
+			</div>
+		}
+	</div>
+</nav>

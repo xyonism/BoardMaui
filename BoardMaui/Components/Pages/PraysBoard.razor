@@ -1,0 +1,172 @@
+﻿@using System.Text.Json
+@using BoardMaui.Extensions
+@using BoardMaui.Models
+@inject NavigationManager NavigationManager
+@inject AutoNavigation AutoNavigation
+@page "/praysboard"
+
+
+<style>
+	.title {
+		font-size: @((3.75 * FontSize) + "vmin !important");
+	}
+
+	.minititle {
+		font-size: @((2.75 * FontSize) + "vmin !important");
+	}
+
+	.customtext {
+		font-size: @((1.75 * FontSize) + "vmin !important");
+	}
+
+	.hugetext {
+		font-size: @((7.5 * FontSize) + "vmin !important");
+	}
+
+	.body > tr > td {
+		font-size: @((2.5 * FontSize) + "vmin");
+	}
+
+	.body2 > tr > td {
+		font-size: @((2.25 * FontSize) + "vmin");
+	}
+</style>
+
+<table class="w-100 body2">
+	<tr class="w-100" style="height: 60vmin;">
+		<td valign="top" class="rounded-4 shadow w-100">
+			<p class="minititle">
+				<b>לוח תפילות שבועי</b>
+			</p>
+			<hr />
+			<table class="w-100" style="border-spacing: 4vmin;">
+				<tr>
+					<td>
+						<b>יום</b>
+					</td>
+
+					<td>
+						<b>שחרית</b>
+					</td>
+
+
+					<td>
+						<b>מנחה</b>
+					</td>
+					<td>
+						<b>ערבית</b>
+					</td>
+				</tr>
+				@for (int j = 0; j < 7; j++)
+				{
+					@if (((int)DateTime.Today.AddDays(j).DayOfWeek) is not 6 and not 5)
+					{
+						var dayName = new System.Globalization.CultureInfo("he-IL").DateTimeFormat.GetDayName(DateTime.Today.AddDays(j).DayOfWeek);
+						<tr class="w-100">
+							<td style="width: 10%"><b>@dayName</b></td>
+							<td style="width: 30%">
+								<span> - </span>
+								@foreach (var pray in MauiProgram.Synagogue.ShaharitPrays?.Where(pray => pray.DayOfWeek == dayName && !pray.Shabbat) ?? [])
+								{
+									<span>@pray.Title - </span>
+									<span>
+										@if (pray.Dynamic)
+										{
+											try
+											{
+												@TimeOnly.FromDateTime(new ComplexZmanimCalendar(DateTime.Today.AddDays(j), location) { AstronomicalCalculator = new BoardMaui.Extensions.Calculator.SunTimesCalculator() }.GetSunrise()).Add(pray.Time.GetValueOrDefault().ToTimeSpan())
+											}
+											catch
+											{
+												@TimeOnly.FromDateTime(new ComplexZmanimCalendar(DateTime.Today.AddDays(j), location) { AstronomicalCalculator = new BoardMaui.Extensions.Calculator.SunTimesCalculator() }.GetSunrise())
+											}
+										}
+										else
+										{
+											@pray.Time
+										}
+									</span>
+									<span> - </span>
+								}
+							</td>
+							<td style="width:30%">
+								<span> - </span>
+								@foreach (var pray in MauiProgram.Synagogue.MinhaPrays?.Where(pray => pray.DayOfWeek == dayName && !pray.Shabbat) ?? [])
+								{
+
+									<span>@pray.Title - </span>
+									<span>
+										@if (pray.Dynamic)
+										{
+											try
+											{
+												@TimeOnly.FromDateTime(new ComplexZmanimCalendar(DateTime.Today.AddDays(j), location) { AstronomicalCalculator = new BoardMaui.Extensions.Calculator.SunTimesCalculator() }.GetSunset()).Add(pray.Time.GetValueOrDefault().ToTimeSpan())
+											}
+											catch
+											{
+												@TimeOnly.FromDateTime(new ComplexZmanimCalendar(DateTime.Today.AddDays(j), location) { AstronomicalCalculator = new BoardMaui.Extensions.Calculator.SunTimesCalculator() }.GetSunset())
+											}
+										}
+										else
+										{
+											@pray.Time
+										}
+									</span>
+									<span> - </span>
+								}
+
+							</td>
+							<td style="width: 30%">
+								<span> - </span>
+								@foreach (var pray in MauiProgram.Synagogue.ArvitPrays?.Where(pray => pray.DayOfWeek == dayName && !pray.Shabbat) ?? [])
+								{
+
+									<span>@pray.Title - </span>
+									<span>
+										@if (pray.Dynamic)
+										{
+											try
+											{
+												@TimeOnly.FromDateTime(new ComplexZmanimCalendar(DateTime.Today.AddDays(j), location) { AstronomicalCalculator = new BoardMaui.Extensions.Calculator.SunTimesCalculator() }.GetSunset()).AddMinutes(13.5).Add(pray.Time.GetValueOrDefault().ToTimeSpan())
+											}
+											catch
+											{
+												@TimeOnly.FromDateTime(new ComplexZmanimCalendar(DateTime.Today.AddDays(j), location) { AstronomicalCalculator = new BoardMaui.Extensions.Calculator.SunTimesCalculator() }.GetSunset()).AddMinutes(13.5)
+											}
+										}
+										else
+										{
+											@pray.Time
+										}
+									</span>
+									<span> - </span>
+								}
+
+							</td>
+						</tr>
+					}
+				}
+
+			</table>
+		</td>
+	</tr>
+</table>
+@code
+{
+	public double FontSize = 1 + MauiProgram.Synagogue.Settings.FontSize[nameof(PraysBoard)] * 0.1;
+
+	GeoLocation location = new GeoLocation("Jerusalem, IL", MauiProgram.Synagogue.Settings.Latitude, MauiProgram.Synagogue.Settings.Longitude, 0, new OlsonTimeZone("Asia/Jerusalem"));
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.Synagogue.ArvitPrays ??= new();
+		MauiProgram.Synagogue.ShaharitPrays ??= new();
+		MauiProgram.Synagogue.MinhaPrays ??= new();
+	}
+	protected override async Task OnAfterRenderAsync(bool first)
+	{
+		await base.OnAfterRenderAsync(first);
+		if (first)
+			await AutoNavigation.AutoNavigateAsync(MauiProgram.Synagogue.Settings.ShowPraysBoard, "praysboard", "/holiday");
+	}
+}

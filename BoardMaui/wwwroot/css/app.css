@@ -1,0 +1,273 @@
+﻿.menu-container {
+	/* Position the menu container where you want it */
+	position: fixed; /* Or absolute, relative depending on your layout */
+
+	width: 100%; /* Or a specific width */
+	z-index: 1000; /* Ensure it's above other content */
+	overflow: hidden; /* Important for hiding content outside */
+}
+
+.menu {
+	transition: transform 0.3s ease-in-out; /* Smooth transition for showing/hiding */
+}
+
+.w-20 {
+	width: 20% !important;
+}
+/* Initially hide the menu by translating it off-screen */
+.menu-container .menu {
+	transform: translateY(-100%); /* For a top menu */
+	/* Or translateX(-100%) for a left menu */
+	/* Or translateY(100%) for a bottom menu */
+	/* Or translateX(100%) for a right menu */
+}
+
+/* Show the menu on hover */
+.menu-container:hover .menu {
+	transform: translateY(0); /* Bring it back into view */
+	background-color: rgba(255, 255, 255, 0.9);
+}
+
+
+.scroll-table {
+	display: block !important;
+	margin: auto !important;
+	animation: scroll-up 17.5s linear infinite;
+}
+
+@keyframes scroll-up {
+	0% {
+		transform: translateY(100%); /* Start completely above the visible container */
+	}
+
+	100% {
+		transform: translateY(-100%); /* End completely below the visible container */
+	}
+}
+
+
+
+
+/* Optional: Style individual menu items */
+.menu td a {
+	/*	display: block;*/
+	/*	padding: 15px 20px;*/
+	/*	color: white;*/
+	/*	text-decoration: none;*/
+}
+
+	.menu td a:hover {
+		/*		background-color: #555;*/
+	}
+
+.minititle {
+	padding-top: 1vmin;
+}
+
+
+
+@font-face {
+	font-family: "SBL_BLit";
+	src: url("SBL_BLit.ttf");
+}
+
+
+table {
+	border-collapse: separate;
+	border-spacing: 4.5vmin;
+}
+
+header, main {
+	text-align: center;
+	direction: rtl;
+}
+
+
+.head {
+	border-spacing: 4.5vmin;
+}
+
+
+.body {
+	border-spacing: 4.5vmin;
+}
+
+td > table {
+	border-spacing: 0px;
+}
+
+td > * > table {
+	border-spacing: 0px;
+}
+
+p {
+	margin-bottom: 1vmin;
+}
+
+
+
+* {
+	text-rendering: geometricPrecision;
+	aspect-ratio: auto !important;
+	font-optical-sizing: auto !important;
+	font-style: normal !important;
+	font-kerning: none !important;
+	font-variant-ligatures: no-common-ligatures !important;
+	font-variant-numeric: tabular-nums !important;
+	-webkit-font-smoothing: always !important;
+	font-smooth: always !important;
+	font-family: "SBL_BLit", system-ui !important;
+	line-height: 1.15 !important;
+}
+
+.menu-container {
+	/* Position the menu container where you want it */
+	/*position: fixed;*/ /* Or absolute, relative depending on your layout */
+	top: 0;
+	left: 0;
+	width: 100%; /* Or a specific width */
+	z-index: 1000; /* Ensure it's above other content */
+	overflow: hidden; /* Important for hiding content outside */
+}
+
+.w-33 {
+	width: calc(100% / 3) !important;
+}
+
+.w-66 {
+	width: calc(100% / 3 * 2) !important;
+}
+
+.menu {
+	/*	list-style: none;*/
+	transition: transform 0.3s ease-in-out; /* Smooth transition for showing/hiding */
+}
+
+/* Initially hide the menu by translating it off-screen */
+.menu-container .menu {
+	transform: translateY(-100%); /* For a top menu */
+	/* Or translateX(-100%) for a left menu */
+	/* Or translateY(100%) for a bottom menu */
+	/* Or translateX(100%) for a right menu */
+}
+
+/* Show the menu on hover */
+.menu-container:hover .menu {
+	transform: translateY(0); /* Bring it back into view */
+}
+
+
+
+
+.circle {
+	background-color: rgba(255, 255, 255, 0.9);
+	border-radius: 100%;
+	background-size: 100% 100%;
+	box-shadow: 10px 10px 10px 0px rgba(0,0,0,0.75);
+	border: 10px solid transparent;
+}
+
+.square {
+	background-color: rgba(255, 255, 255, 0.9);
+	border-radius: 50px;
+	background-size: 100% 100%;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	border: 10px solid transparent;
+}
+
+.rounded-4, .rounded-3, .rounded-2, .rounded-1, .rounded-0, .rounded-5, .rounded, .rounded-pill {
+	background: rgba(248, 249, 250, 0.85) !important;
+}
+
+a, .btn-link {
+	color: black;
+	text-decoration: none;
+}
+
+.btn-primary {
+	color: #fff;
+	background-color: #1b6ec2;
+	border-color: #1861ac;
+}
+
+/*.m-0 > *, .m-0 > * > *, .m-1 > *, .m-1 > *, .m-1 > * > * {
+	background-color: transparent !important;
+}*/
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+	box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.content {
+	padding-top: 1.1rem;
+}
+
+h1:focus {
+	outline: none;
+}
+
+.valid.modified:not([type=checkbox]) {
+	outline: 1px solid #26b050;
+}
+
+.invalid {
+	outline: 1px solid #e50000;
+}
+
+.validation-message {
+	color: #e50000;
+}
+
+#blazor-error-ui {
+	background: lightyellow;
+	bottom: 0;
+	box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+	display: none;
+	left: 0;
+	padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
+}
+
+	#blazor-error-ui .dismiss {
+		cursor: pointer;
+		position: absolute;
+		right: 0.75rem;
+		top: 0.5rem;
+	}
+
+.blazor-error-boundary {
+	background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
+	padding: 1rem 1rem 1rem 3.7rem;
+	color: white;
+}
+
+.footer-custom {
+	background-size: 100% 100%;
+	border-spacing: 0.5vmin;
+}
+
+.blazor-error-boundary::after {
+	content: "An error has occurred."
+}
+
+.status-bar-safe-area {
+	display: none;
+}
+
+@supports (-webkit-touch-callout: none) {
+	.status-bar-safe-area {
+		display: flex;
+		position: sticky;
+		top: 0;
+		height: env(safe-area-inset-top);
+		background-color: #f7f7f7;
+		width: 100%;
+		z-index: 1;
+	}
+
+	.flex-column, .navbar-brand {
+		padding-left: env(safe-area-inset-left);
+	}
+}

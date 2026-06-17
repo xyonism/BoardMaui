@@ -1,0 +1,103 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
+
+		<!-- Note for MacCatalyst:
+      The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
+      When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
+      The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
+      either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
+		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+		<TargetFrameworks>net10.0-android</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<RootNamespace>BoardMaui</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<EnableDefaultCssItems>false</EnableDefaultCssItems>
+		<Nullable>enable</Nullable>
+
+		<!-- Display name -->
+		<ApplicationTitle>BoardMaui</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>com.companyname.BoardMaui</ApplicationId>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
+
+
+	
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+
+		<EnableCompressionInSingleFile>false</EnableCompressionInSingleFile>
+		<Optimization>false</Optimization>
+		<RunAOTCompilation>false</RunAOTCompilation>
+		<Optimize>false</Optimize>
+		<TieredCompilation>false</TieredCompilation>
+		<EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<EnableTrimAnalysis>false</EnableTrimAnalysis>
+		<PublishTrimmed>false</PublishTrimmed>
+		<TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+		<CompressionEnabled>false</CompressionEnabled>
+		<EnableLLVM>false</EnableLLVM>
+		<PublishAot>false</PublishAot>
+		<IsAotCompatible>false</IsAotCompatible>
+		<IsTrimmable>false</IsTrimmable>
+		<EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+		<EnableSingleFileAnalyzer>false</EnableSingleFileAnalyzer>
+		<EnableAotAnalyzer>false</EnableAotAnalyzer>
+		<CetCompat>false</CetCompat>
+		<RazorCompileOnBuild>true</RazorCompileOnBuild>
+		<RazorCompileOnPublish>true</RazorCompileOnPublish>
+		<UseRazorSourceGenerator>true</UseRazorSourceGenerator>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">29.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.1</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.1</TargetPlatformMinVersion>
+
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+
+	<PropertyGroup>
+	  <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.26100.0</TargetFrameworks>
+	  <PackageCertificateThumbprint>65507BCE734B8F30C651AD6E8FBEB9426E5D4B4C</PackageCertificateThumbprint>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiImage Include="Resources\Images\*" />
+		<MauiFont Include="Resources\Fonts\*" />
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<MauiFont Include="wwwroot\css\Alef-Bold.ttf" />
+		<MauiFont Include="wwwroot\css\Alef-Regular.ttf" />
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+		<PackageReference Include="Google.Cloud.Firestore" Version="*-*" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.*" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="10.*" />
+		<PackageReference Include="NodaTime" Version="*-*" />
+		<PackageReference Include="QRCoder" Version="*-*" />
+	</ItemGroup>
+
+</Project>

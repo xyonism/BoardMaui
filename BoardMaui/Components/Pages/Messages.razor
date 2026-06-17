@@ -1,0 +1,78 @@
+﻿@using System.Text.Json
+@using BoardMaui.Extensions
+@using BoardMaui.Models
+
+@inject NavigationManager NavigationManager
+@inject AutoNavigation AutoNavigation
+@page "/messages"
+
+<style>
+	.title {
+		font-size: @((3.75 * FontSize) + "vmin !important");
+	}
+
+	.minititle {
+		font-size: @((2.75 * FontSize) + "vmin !important");
+	}
+
+	.customtext {
+		font-size: @((1.75 * FontSize) + "vmin !important");
+	}
+
+	.hugetext {
+		font-size: @((7.5 * FontSize) + "vmin !important");
+	}
+
+	.body > tr > td {
+		font-size: @((2.5 * FontSize) + "vmin");
+	}
+
+	.body2 > tr > td {
+		font-size: @((2.25 * FontSize) + "vmin");
+	}
+
+</style>
+
+
+
+<table class="w-100 m-auto body2">
+	<tr style="height: 60vmin;">
+		<td valign="top" class="rounded-4 shadow">
+			<p class="minititle">
+				<b>הודעות</b>
+			</p>
+			<hr />
+			@for (int i = 0; i < MauiProgram.Synagogue.Messages?.Count; i++)
+			{
+				<table class="m-0 w-100">
+					<tr>
+						<td class="w-25 p-0">
+							<b>@MauiProgram.Synagogue.Messages[i].Title</b>
+						</td>
+						<td width="75%" class="p-0">
+							@MauiProgram.Synagogue.Messages[i].Body
+						</td>
+					</tr>
+				</table>
+				<hr />
+			}
+		</td>
+	</tr>
+</table>
+@code
+{
+	public double FontSize = 1 + MauiProgram.Synagogue.Settings.FontSize[nameof(Messages)] * 0.1;
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.CurrentPage = null;
+		MauiProgram.Synagogue.Messages ??= new();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool first)
+	{
+		await base.OnAfterRenderAsync(first);
+		if (first)
+			await AutoNavigation.AutoNavigateAsync(MauiProgram.Synagogue.Settings.ShowMessages, "messages", "/");
+	}
+}

@@ -1,0 +1,409 @@
+﻿@using System.Text.Json;
+@using System.Text.Json.Serialization;
+@using BoardMaui.Extensions
+@using BoardMaui.Models
+@page "/editprays"
+@inject NavigationManager NavigationManager
+@inject DatabaseUtility DatabaseUtility
+<style>
+	* {
+		opacity: 1 !important;
+	}
+</style>
+<form>
+	<table class="w-100 text-start">
+		<tr style="height: 60vmin;">
+			<td valign="top" class="rounded-4 shadow">
+				<p class="minititle text-center">
+					<b>עורך תפילות</b>
+
+				</p>
+				<hr />
+				<table class="w-100 body2 p-5">
+					<tr>
+						<td valign="top">
+							<p class="minititle">
+								<b>שחרית</b>
+
+							</p>
+							<hr />
+							<table class="m-1 w-100">
+								<tr>
+									<td class="w-25">
+										כותרת
+									</td>
+									<td class="w-75">
+										<input type="text" @bind="NewShaharitPray.Title" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										יום בשבוע
+									</td>
+									<td class="w-75">
+										<select @bind="NewShaharitPray.DayOfWeek">
+											<option value="" selected>בחר יום</option>
+											@foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+											{
+												var dayName = culture.DateTimeFormat.GetDayName(day);
+												<option value="@dayName">@dayName</option>
+											}
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										זמן משתנה אוטומטית
+									</td>
+									<td class="w-75">
+										<input type="checkbox" @bind="NewShaharitPray.Dynamic" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										זמן
+									</td>
+									<td class="w-75">
+										<input type="time" @bind="NewShaharitPray.Time" />
+										@if (NewShaharitPray.Dynamic)
+										{
+											<br />
+											<label>דקות מהנץ</label>
+										}
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<input value="הוסף" type="reset" @onclick="AddShaharit" />
+									</td>
+								</tr>
+							</table>
+
+							@foreach (var Pray in MauiProgram.Synagogue.ShaharitPrays ?? [])
+							{
+								<hr />
+								<p>
+									<table class="m-0 w-100">
+										<tr>
+											<td class="w-20">
+												@Pray.Title
+											</td>
+											<td class="w-20">
+												@if (Pray.Dynamic)
+												{
+													try
+													{
+														@(TimeOnly.FromDateTime(calendar.GetSunrise()).Add(Pray.Time.GetValueOrDefault().ToTimeSpan()))
+														<br />
+														<label>זמן משתנה אוטומטית</label>
+													}
+													catch
+													{
+														@TimeOnly.FromDateTime(calendar.GetSunrise())
+													}
+												}
+												else
+												{
+													@Pray.Time
+												}
+
+											</td>
+											<td class="w-20">
+												<label>@Pray.DayOfWeek</label>
+											</td>
+											<td class="w-20">
+												<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.ShaharitPrays, Pray)" />
+											</td>
+										</tr>
+									</table>
+								</p>
+							}
+						</td>
+					</tr>
+				</table>
+				<hr />
+				<table class="w-100 body2 p-5">
+					<tr>
+						<td valign="top">
+							<p class="minititle">
+								<b>מנחה</b>
+							</p>
+							<hr />
+							<table class="m-1 w-100">
+								<tr>
+									<td class="w-25">
+										כותרת
+									</td>
+									<td class="w-75">
+										<input type="text" @bind="NewMinhaPray.Title" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										יום בשבוע
+									</td>
+									<td class="w-75">
+										<select @bind="NewMinhaPray.DayOfWeek">
+											<option value="" selected>בחר יום</option>
+											@foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+											{
+												var dayName = culture.DateTimeFormat.GetDayName(day);
+												<option value="@dayName">@dayName</option>
+											}
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										זמן משתנה אוטומטית
+									</td>
+									<td class="w-75">
+										<input type="checkbox" @bind="NewMinhaPray.Dynamic" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										זמן
+									</td>
+									<td class="w-75">
+										<input type="time" @bind="NewMinhaPray.Time" />
+										@if (NewMinhaPray.Dynamic)
+										{
+											<br />
+											<label>מהשקיעה</label>
+										}
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<input value="הוסף" type="reset" @onclick="AddMinha" />
+									</td>
+								</tr>
+							</table>
+
+							@foreach (var Pray in MauiProgram.Synagogue.MinhaPrays ?? [])
+							{
+								<hr />
+								<p>
+									<table class="m-0 w-100">
+										<tr>
+											<td class="w-20">
+												@Pray.Title
+											</td>
+											<td class="w-20">
+												@if (Pray.Dynamic)
+												{
+													try
+													{
+														@(TimeOnly.FromDateTime(calendar.GetSunset()).Add(Pray.Time.GetValueOrDefault().ToTimeSpan()))
+														<br />
+														<label>זמן משתנה אוטומטית</label>
+													}
+													catch
+													{
+														@TimeOnly.FromDateTime(calendar.GetSunset())
+													}
+												}
+												else
+												{
+													@Pray.Time
+												}
+											</td>
+											<td class="w-20">
+												<label>@Pray.DayOfWeek</label>
+											</td>
+											<td class="w-20">
+												<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.MinhaPrays, Pray)" />
+											</td>
+										</tr>
+									</table>
+								</p>
+							}
+						</td>
+					</tr>
+				</table>
+				<hr />
+				<table class="w-100 body2 p-5">
+					<tr>
+						<td valign="top">
+							<p class="minititle">
+								<b>ערבית</b>
+							</p>
+							<hr />
+							<table class="m-1 w-100">
+								<tr>
+									<td class="w-25">
+										כותרת
+									</td>
+									<td class="w-75">
+										<input type="text" @bind="NewArvitPray.Title" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										יום בשבוע
+									</td>
+									<td class="w-75">
+										<select @bind="NewArvitPray.DayOfWeek">
+											<option value="" selected>בחר יום</option>
+											@foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+											{
+												var dayName = culture.DateTimeFormat.GetDayName(day);
+												<option value="@dayName">@dayName</option>
+											}
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										זמן משתנה אוטומטית
+									</td>
+									<td class="w-75">
+										<input type="checkbox" @bind="NewArvitPray.Dynamic" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-25">
+										זמן
+									</td>
+									<td class="w-75">
+										<input type="time" @bind="NewArvitPray.Time" />
+										@if (NewArvitPray.Dynamic)
+										{
+											<br />
+											<label>מצאת הכוכבים</label>
+										}
+
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<input value="הוסף" type="reset" @onclick="AddArvit" />
+									</td>
+								</tr>
+							</table>
+
+							@foreach (var Pray in MauiProgram.Synagogue.ArvitPrays ?? [])
+							{
+								<hr />
+								<p>
+									<table class="m-0 w-100">
+										<tr>
+											<td class="w-20">
+												@Pray.Title
+											</td>
+											<td class="w-20">
+												@if (Pray.Dynamic)
+												{
+													try
+													{
+														@(TimeOnly.FromDateTime(calendar.GetSunset()).AddMinutes(13.5).Add(Pray.Time.GetValueOrDefault().ToTimeSpan()))
+														<br />
+														<label>זמן משתנה אוטומטית</label>
+													}
+													catch
+													{
+														@TimeOnly.FromDateTime(calendar.GetSunset()).AddMinutes(13.5)
+													}
+												}
+												else
+												{
+													@Pray.Time
+												}
+
+											</td>
+											<td class="w-20">
+												<label>@Pray.DayOfWeek</label>
+											</td>
+											<td class="w-20">
+												<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.ArvitPrays, Pray)" />
+											</td>
+										</tr>
+									</table>
+								</p>
+							}
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+	</table>
+</form>
+
+@code
+{
+
+	public System.Globalization.CultureInfo culture { get; set; } = new System.Globalization.CultureInfo("he-IL");
+	public Pray NewShaharitPray { get; set; } = new Pray();
+	public Pray NewMinhaPray { get; set; } = new Pray();
+	public Pray NewArvitPray { get; set; } = new Pray();
+	public ComplexZmanimCalendar calendar = new ComplexZmanimCalendar(DateTime.Today, new GeoLocation("Jerusalem, IL", MauiProgram.Synagogue.Settings.Latitude, MauiProgram.Synagogue.Settings.Longitude, 0, new OlsonTimeZone("Asia/Jerusalem")))
+	{
+		AstronomicalCalculator = new BoardMaui.Extensions.Calculator.SunTimesCalculator()
+	};
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.CurrentPage = null;
+		MauiProgram.Synagogue.ShaharitPrays ??= new();
+		MauiProgram.Synagogue.MinhaPrays ??= new();
+		MauiProgram.Synagogue.ArvitPrays ??= new();
+	}
+
+
+
+	public async Task AddShaharit()
+	{
+		NewShaharitPray.Shabbat = culture.DateTimeFormat.GetDayName(Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().Last()) == NewShaharitPray.DayOfWeek;
+
+		MauiProgram.Synagogue.ShaharitPrays?.Add(NewShaharitPray);
+		NewShaharitPray = new();
+		await DatabaseUtility.SaveAll();
+	}
+	public async Task AddMinha()
+	{
+		NewMinhaPray.Shabbat = culture.DateTimeFormat.GetDayName(Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().Last()) == NewMinhaPray.DayOfWeek;
+
+		MauiProgram.Synagogue.MinhaPrays?.Add(NewMinhaPray);
+		NewMinhaPray = new();
+		await DatabaseUtility.SaveAll();
+	}
+	public async Task AddArvit()
+	{
+		NewArvitPray.Shabbat = culture.DateTimeFormat.GetDayName(Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().Last()) == NewArvitPray.DayOfWeek;
+
+		MauiProgram.Synagogue.ArvitPrays?.Add(NewArvitPray);
+		NewArvitPray = new();
+		await DatabaseUtility.SaveAll();
+	}
+
+	public async Task RemoveShaharitFromList(int? i)
+	{
+		if (i.HasValue)
+		{
+			MauiProgram.Synagogue.ShaharitPrays?.RemoveAt(i.Value);
+			await DatabaseUtility.SaveAll();
+		}
+
+
+	}
+	public async Task RemoveMinhaFromList(int? i)
+	{
+		if (i.HasValue)
+		{
+			MauiProgram.Synagogue.MinhaPrays?.RemoveAt(i.Value);
+			await DatabaseUtility.SaveAll();
+		}
+
+	}
+	public async Task RemoveArvitFromList(int? i)
+	{
+		if (i.HasValue)
+		{
+			MauiProgram.Synagogue.ArvitPrays?.RemoveAt(i.Value);
+			await DatabaseUtility.SaveAll();
+		}
+
+	}
+}

@@ -1,0 +1,116 @@
+﻿@using System.Text.Json;
+@using System.Text.Json.Serialization;
+@using BoardMaui.Extensions
+@using BoardMaui.Models;
+
+@inject DatabaseUtility DatabaseUtility;
+@inject AutoNavigation AutoNavigation;
+@page "/editholiday"
+
+<style>
+	* {
+		opacity: 1 !important;
+	}
+</style>
+<form>
+	<table class="w-100 body2">
+		<tr style="height: 60vmin;">
+			<td valign="top" class="rounded-4 shadow">
+				<table class="w-100">
+					<tr>
+						<td class="w-33" valign="top">
+							<p class="minititle">
+								<b>עורך ימים מיוחדים</b>
+							</p>
+							<hr />
+							<table class="m-1 w-100">
+								<tr>
+									<td class="w-33">
+										שם יום
+									</td>
+									<td class="w-66">
+										<input type="text" @bind="MauiProgram.Synagogue.Settings.CurrentHoliday" />
+										<input value="שמור" type="button" @onclick="DatabaseUtility.SaveAll" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-33">
+										שם אירוע/תפילה
+									</td>
+									<td class="w-66">
+										<input type="text" @bind="holidayEvent" />
+									</td>
+								</tr>
+								<tr>
+									<td class="w-33">
+										זמן
+									</td>
+									<td class="w-66">
+										<input type="time" @bind="holidayEventTime" />
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<input value="הוסף" type="reset" @onclick="Add" />
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td class="w-66" valign="top">
+							<p class="minititle">
+								<b>רשימה</b>
+							</p>
+							<hr />
+							@foreach (var prayer in MauiProgram.Synagogue.HolidayPrays ?? [])
+							{
+								<table class="m-0 w-100">
+									<tr>
+										<td class="w-33">
+											@prayer.Title
+										</td>
+										<td class="w-33">
+											@prayer.Time
+										</td>
+										<td class="w-33">
+											<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.HolidayPrays, prayer)" />
+										</td>
+									</tr>
+								</table>
+								<hr />
+							}
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>
+
+@code
+{
+	string? holidayEvent;
+	TimeOnly? holidayEventTime;
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		MauiProgram.CurrentPage = null;
+		MauiProgram.Synagogue.HolidayPrays ??= new();
+	}
+
+	public async Task RemoveFromList(int? i)
+	{
+		if (i.HasValue)
+		{
+			MauiProgram.Synagogue.HolidayPrays?.RemoveAt(i.Value);
+			await DatabaseUtility.SaveAll();
+		}
+	}
+
+	public async Task Add()
+	{
+		MauiProgram.Synagogue.HolidayPrays?.Add(new Pray() { Title = holidayEvent, Time = holidayEventTime, Dynamic = false, Shabbat = false });
+		holidayEvent = null;
+		holidayEventTime = null;
+		await DatabaseUtility.SaveAll();
+	}
+}
