@@ -1,4 +1,5 @@
-﻿@using BoardMaui.Extensions
+﻿@using System.Globalization
+@using BoardMaui.Extensions
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @using Microsoft.Maui.Controls.Platform;
@@ -14,11 +15,11 @@
 <header>
 	<table class="head w-100 m-auto" style="height: 20vmin">
 		<tr>
-			<td class="rounded-4 shadow" width="40%"><b>@day</b></td>
+			<td class="rounded-4 shadow" width="40%"><b>@Day</b></td>
 
 			<td class="rounded-pill shadow" width="20%"><b>@TimeOnly.FromDateTime(DateTime.UtcNow)</b></td>
 
-			<td class="rounded-4 shadow" width="40%"><b>@hc</b></td>
+			<td class="rounded-4 shadow" width="40%"><b>@MonthDay</b></td>
 		</tr>
 	</table>
 </header>
@@ -50,41 +51,45 @@
 @code
 {
 
-	public string? time;
-	public string? hc;
-	public string? day;
+	public string? Time;
+	//public string? hc;
+	public string? Day;
+	public string? MonthDay;
+
 	protected override void OnParametersSet()
 	{
-
 		DeviceDisplay.Current.KeepScreenOn = true;
 		System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("he-IL");
 		try
 		{
-			day = (TimeOnly.FromDateTime(DateTime.Parse($"{MauiProgram.Calendar?.GetSunset()}").AddMinutes(13.5)) < TimeOnly.FromDateTime(DateTime.UtcNow)) ? culture.DateTimeFormat.GetDayName(DateTime.Today.AddDays(1).DayOfWeek).Replace("יום", "ליל") : culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+			Day = (TimeOnly.FromDateTime(DateTime.Parse($"{MauiProgram.Calendar?.GetSunset()}").AddMinutes(13.5)) < TimeOnly.FromDateTime(DateTime.UtcNow)) ? culture.DateTimeFormat.GetDayName(DateTime.Today.AddDays(1).DayOfWeek).Replace("יום", "ליל") : culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
 		}
 		catch
 		{
-			day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+			Day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
 		}
-		System.Globalization.HebrewCalendar HebCal = new System.Globalization.HebrewCalendar();
-		int hebrewMonth = HebCal.GetMonth(DateTime.Today);
-		bool isLeapYear = HebCal.IsLeapYear(HebCal.GetYear(DateTime.Today));
+		culture.DateTimeFormat.Calendar = new HebrewCalendar();
+		MonthDay = DateTime.Now.ToString(culture.DateTimeFormat.MonthDayPattern, culture);
+
+		// System.Globalization.HebrewCalendar HebCal = new System.Globalization.HebrewCalendar();
+		// int hebrewMonth = HebCal.GetMonth(DateTime.Today);
+		// bool isLeapYear = HebCal.IsLeapYear(HebCal.GetYear(DateTime.Today));
 
 		// Define month names, adjusting for leap year
-		string[] hebrewMonths = isLeapYear ?
-			new string[] { "", "תשרי", "חשוון", "כסלו", "טבת", "שבט", "אדר א", "אדר ב", "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול" } :
-			new string[] { "", "תשרי", "חשוון", "כסלו", "טבת", "שבט", "אדר", "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול" };
+		// string[] hebrewMonths = isLeapYear ?
+		// 	new string[] { "", "תשרי", "חשוון", "כסלו", "טבת", "שבט", "אדר א", "אדר ב", "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול" } :
+		// 	new string[] { "", "תשרי", "חשוון", "כסלו", "טבת", "שבט", "אדר", "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול" };
 
 		// Construct the date string
-		hc = Gematriya.DoGematriya(HebCal.GetDayOfMonth(DateTime.Today)) + " ";
-		if (hebrewMonth >= 1 && hebrewMonth < hebrewMonths.Length)
-		{
-			hc += hebrewMonths[hebrewMonth];
-		}
-		else
-		{
-			hc += "Unknown Month"; // Fallback for unexpected month values
-		}
+		// hc = Gematriya.DoGematriya(HebCal.GetDayOfMonth(DateTime.Today)) + " ";
+		// if (hebrewMonth >= 1 && hebrewMonth < hebrewMonths.Length)
+		// {
+		// 	hc += hebrewMonths[hebrewMonth];
+		// }
+		// else
+		// {
+		// 	hc += "Unknown Month"; // Fallback for unexpected month values
+		// }
 	}
 
 }
