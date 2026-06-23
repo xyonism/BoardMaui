@@ -195,6 +195,10 @@ public static class MauiProgram
 						Preferences.Set("Synagogue.Guid", Synagogue.Guid);
 					}
 				}
+				else
+				{
+					Preferences.Set("Synagogue.Guid", Synagogue.Guid);
+				}
 			});
 		}
 		catch
