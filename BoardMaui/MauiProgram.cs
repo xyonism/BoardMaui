@@ -4,7 +4,6 @@ using BoardMaui.Extensions.Calculator;
 using BoardMaui.Models;
 using Google.Cloud.Firestore;
 using Microsoft.Win32;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 
@@ -175,30 +174,41 @@ public static class MauiProgram
 
 				if (!string.IsNullOrEmpty(synagogueGuid))
 				{
-					var query = firestoreDb.Collection("Synagogues").WhereEqualTo("Guid", synagogueGuid);
+					// Try to load existing synagogue
+					var query = firestoreDb.Collection("Synagogues")
+										   .WhereEqualTo("Guid", synagogueGuid);
+
 					var snapshot = await query.GetSnapshotAsync(cts.Token);
+					Synagogue = snapshot.Documents[0].ConvertTo<Synagogue>();
 
-					if (snapshot.Documents.Count > 0)
+					if (Synagogue == null)
 					{
-						Synagogue = snapshot.Documents[0].ConvertTo<Synagogue>();
-					}
-					else
-					{
-						var newSynagogue = new Synagogue { Guid = Guid.NewGuid().ToString() };
-						var docRef = await firestoreDb.Collection("Synagogues").AddAsync(newSynagogue).ConfigureAwait(false);
+						// Create new synagogue if GUID not found in Firestore
+						Synagogue = new Synagogue { Guid = Guid.NewGuid().ToString() };
 
-						// Fetch the created doc to ensure we have the server-side state
+						var docRef = await firestoreDb.Collection("Synagogues")
+													  .AddAsync(Synagogue)
+													  .ConfigureAwait(false);
+
 						var newSnapshot = await docRef.GetSnapshotAsync(cts.Token);
 						Synagogue = newSnapshot.ConvertTo<Synagogue>();
-
-						// 4. Save the new GUID to preferences
-						Preferences.Set("Synagogue.Guid", Synagogue.Guid);
 					}
 				}
 				else
 				{
-					Preferences.Set("Synagogue.Guid", Synagogue.Guid);
+					// No GUID in preferences → create new synagogue
+					Synagogue = new Synagogue { Guid = Guid.NewGuid().ToString() };
+
+					var docRef = await firestoreDb.Collection("Synagogues")
+												  .AddAsync(Synagogue)
+												  .ConfigureAwait(false);
+
+					var newSnapshot = await docRef.GetSnapshotAsync(cts.Token);
+					Synagogue = newSnapshot.ConvertTo<Synagogue>();
 				}
+
+				// Always update preferences with the final GUID
+
 			});
 		}
 		catch
@@ -213,6 +223,7 @@ public static class MauiProgram
 		}
 		finally
 		{
+			Preferences.Set("Synagogue.Guid", Synagogue.Guid);
 			File.WriteAllText(ConfigPath, JsonSerializer.Serialize(Synagogue));
 		}
 	}
