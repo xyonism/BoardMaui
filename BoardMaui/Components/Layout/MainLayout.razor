@@ -1,95 +1,482 @@
 ﻿@using System.Globalization
-@using BoardMaui.Extensions
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
-@using Microsoft.Maui.Controls.Platform;
-@using Microsoft.Maui.Controls.Compatibility;
 
 <style>
-	.head > tr > td {
-		font-size: @((5.75 * (1 + MauiProgram.Synagogue.Settings.FontIncrease * 0.1)) + "vmin");
-	}
+    
+    /* ── CSS VARIABLES ── */
+    :root {
+        --ink: #2b1b0f;
+        --parchment: #fbf3dc;
+        --parchment-mid: #f5eac8;
+        --parchment-deep: #f0e0b0;
+        --gold: #c9a227;
+        --gold-light: #e8d28a;
+        --gold-pale: #fdf4d0;
+        --gold-deep: #8a6b1f;
+        --navy: #1b2a4a;
+        --wine: #6e1423;
+        --font-display: 'Frank Ruhl Libre', Georgia, 'Times New Roman', serif;
+        --font-script: 'David Libre', Georgia, serif;
+        --font-utility: 'Inter', system-ui, sans-serif;
+    }
+
+    /* ── GLOBAL ── */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: var(--parchment);
+        background-attachment: fixed;
+        color: var(--ink);
+        font-family: var(--font-utility);
+        margin: 0;
+        padding: 0;
+    }
+
+        /* Hexagram lattice watermark behind everything */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: .07;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23c9a227' stroke-width='2'%3E%3Cpolygon points='50,3 95,75 5,75'/%3E%3Cpolygon points='50,97 5,25 95,25'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 90px 90px;
+        }
+
+    /* ── HEADER ── */
+    header {
+        position: relative;
+        background: linear-gradient(180deg, #fdf6e3 0%, var(--parchment-deep) 100%);
+        border-top: 5px solid var(--gold);
+        border-bottom: 4px double var(--gold);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.22), inset 0 -1px 0 var(--gold-light);
+        padding: 2.5vmin 3vmin 1.5vmin;
+        z-index: 10;
+    }
+
+        /* Inner cornice line below the thick border */
+        header::before {
+            content: "";
+            position: absolute;
+            left: 3vmin;
+            right: 3vmin;
+            top: 7px;
+            height: 1px;
+            background: var(--gold-light);
+            opacity: 0.55;
+        }
+
+        /* Second cornice line below header */
+        header::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -7px;
+            height: 2px;
+            background: var(--gold-light);
+            opacity: 0.45;
+        }
+
+    /* ── CORNER ROSETTES ── */
+    .corner-rosette {
+        position: absolute;
+        width: 3.2vmin;
+        height: 3.2vmin;
+        top: 10px;
+        z-index: 2;
+    }
+
+        .corner-rosette.left {
+            left: 10px;
+        }
+
+        .corner-rosette.right {
+            right: 10px;
+            transform: scaleX(-1);
+        }
+
+    /* ── STAR OF DAVID CREST ── */
+    .crest-wrap {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5vmin;
+    }
+
+    .crest {
+        width: 7vmin;
+        height: 7vmin;
+        filter: drop-shadow(0 0 8px rgba(201,162,39,0.6));
+        animation: nerTamidGlow 3.4s ease-in-out infinite;
+    }
+
+    @@keyframes nerTamidGlow {
+        0%, 100% {
+            filter: drop-shadow(0 0 5px rgba(201,162,39,0.45));
+        }
+
+        50% {
+            filter: drop-shadow(0 0 14px rgba(201,162,39,0.9));
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .crest {
+            animation: none;
+        }
+    }
+
+    /* ── HEADER TABLETS TABLE ── */
+    .head {
+        width: 100%;
+        margin: 0 auto;
+        border-collapse: separate;
+        border-spacing: 2vmin 0;
+    }
+
+        .head > tr > td {
+            position: relative;
+            font-size: @((5.75 * (1 + MauiProgram.Synagogue.Settings.FontIncrease * 0.1)) + "vmin");
+            padding: 1.2vmin 1vmin;
+            text-align: center;
+            font-family: var(--font-display);
+            /* parchment tablet gradient */
+            background: linear-gradient(160deg, #fdf8ec, var(--parchment-mid));
+            /* arched top, flat bottom – like stone tablets */
+            border: 2px solid var(--gold);
+            border-radius: 42% 42% 6px 6px / 60% 60% 6px 6px;
+            color: var(--navy);
+            text-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 -1px 0 rgba(0,0,0,0.12);
+            box-shadow: 0 5px 14px rgba(0,0,0,0.18), inset 0 0 0 1px var(--gold-light), inset 0 2px 4px rgba(255,255,255,0.65);
+        }
+
+            /* Inner halo ring */
+            .head > tr > td::before {
+                content: "";
+                position: absolute;
+                inset: 5px;
+                border-radius: inherit;
+                border: 1px solid rgba(201,162,39,0.22);
+                pointer-events: none;
+            }
+
+            /* Illuminated corner brackets */
+            .head > tr > td::after {
+                content: "";
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                width: 1.3vmin;
+                height: 1.3vmin;
+                border: 1.5px solid var(--gold);
+                border-left: none;
+                border-bottom: none;
+                opacity: .7;
+            }
+
+    .tablet-corner-tl {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: 1.3vmin;
+        height: 1.3vmin;
+        border: 1.5px solid var(--gold);
+        border-right: none;
+        border-bottom: none;
+        opacity: .7;
+    }
+
+    .head td b {
+        letter-spacing: 0.08vmin;
+        display: block;
+        font-weight: 700;
+    }
+
+    .eyebrow {
+        display: block;
+        font-family: var(--font-utility);
+        font-size: 1.4vmin;
+        font-weight: 600;
+        letter-spacing: 0.28vmin;
+        text-transform: uppercase;
+        color: var(--gold-deep);
+        text-shadow: none;
+        margin-bottom: 0.3vmin;
+    }
+
+    /* ── MENORAH ORNAMENT DIVIDER ── */
+    .menorah-divider {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.8rem 2rem;
+    }
+
+    .divider-rule {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+
+    /* ── MAIN CONTENT ── */
+    main {
+        position: relative;
+        z-index: 1;
+        
+        padding: 0 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(0deg, #fdf6e3 0%, var(--parchment-deep) 100%);
+        border-top: 4px double var(--gold);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
+        z-index: 30;
+    }
+
+        /* Cornice line above the thick footer border */
+        footer::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -7px;
+            height: 2px;
+            background: var(--gold-light);
+            opacity: 0.45;
+        }
+
+    /* ── FOOTER TABLE ── */
+    .footer-custom {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .footer-custom td {
+            position: relative;
+            text-align: center;
+            padding: 0.75vmin 1.2vmin;
+            font-family: var(--font-utility);
+            font-size: 1.4vmin;
+            color: var(--ink);
+            border-right: 1px solid var(--gold);
+        }
+
+            .footer-custom td:last-child {
+                border-right: none;
+            }
+
+            /* Magen David star at each cell seam */
+            .footer-custom td:not(:first-child)::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: -1px;
+                width: 12px;
+                height: 12px;
+                transform: translate(-50%, -50%);
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23c9a227'%3E%3Cpolygon points='50,3 95,75 5,75'/%3E%3Cpolygon points='50,97 5,25 95,25'/%3E%3C/g%3E%3C/svg%3E");
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
+
+    /* ── DEDICATION PLAQUE ── */
+    .dedication {
+        font-size: 2.2vmin;
+        font-family: var(--font-script);
+        font-style: italic;
+        color: var(--wine);
+        text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+    }
+
+        .dedication b {
+            padding: 0 0.6em;
+            border-top: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+        }
+
+    /* ── VERSION LABEL ── */
+    .version-label {
+        font-size: 1.4vmin;
+        color: var(--gold-deep);
+        direction: ltr;
+    }
 </style>
+
 <NavMenu />
 
 <header>
-	<table class="head w-100 m-auto" style="height: 20vmin">
-		<tr>
-			<td class="rounded-4 shadow" width="40%"><b>@Day</b></td>
 
-			<td class="rounded-pill shadow" width="20%"><b>@TimeOnly.FromDateTime(DateTime.UtcNow)</b></td>
+    <!-- Corner rosette ornaments -->
+    <svg class="corner-rosette left" aria-hidden="true" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="5" fill="none" stroke="#c9a227" stroke-width="1.5" />
+        <line x1="14" y1="1" x2="14" y2="27" stroke="#c9a227" stroke-width="1" opacity=".5" />
+        <line x1="1" y1="14" x2="27" y2="14" stroke="#c9a227" stroke-width="1" opacity=".5" />
+        <line x1="5" y1="5" x2="23" y2="23" stroke="#c9a227" stroke-width="0.8" opacity=".35" />
+        <line x1="23" y1="5" x2="5" y2="23" stroke="#c9a227" stroke-width="0.8" opacity=".35" />
+    </svg>
 
-			<td class="rounded-4 shadow" width="40%"><b>@MonthDay</b></td>
-		</tr>
-	</table>
+    <svg class="corner-rosette right" aria-hidden="true" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="5" fill="none" stroke="#c9a227" stroke-width="1.5" />
+        <line x1="14" y1="1" x2="14" y2="27" stroke="#c9a227" stroke-width="1" opacity=".5" />
+        <line x1="1" y1="14" x2="27" y2="14" stroke="#c9a227" stroke-width="1" opacity=".5" />
+        <line x1="5" y1="5" x2="23" y2="23" stroke="#c9a227" stroke-width="0.8" opacity=".35" />
+        <line x1="23" y1="5" x2="5" y2="23" stroke="#c9a227" stroke-width="0.8" opacity=".35" />
+    </svg>
+
+    <!-- Star of David crest -->
+   @*  <div class="crest-wrap">
+        <svg class="crest" aria-label="מגן דוד" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="crestGold" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#f9e89a" />
+                    <stop offset="50%" stop-color="#c9a227" />
+                    <stop offset="100%" stop-color="#7a5c14" />
+                </linearGradient>
+            </defs>
+            <!-- Outer halo rings -->
+            <circle cx="50" cy="50" r="47" fill="none" stroke="#c9a227" stroke-width="1" opacity=".35" />
+            <circle cx="50" cy="50" r="43" fill="none" stroke="#e8d28a" stroke-width="0.5" opacity=".5" />
+            <!-- The two interlocking triangles -->
+            <polygon points="50,6 91,73 9,73" fill="url(#crestGold)" stroke="#5b4313" stroke-width="1.8" />
+            <polygon points="50,94 9,27 91,27" fill="url(#crestGold)" stroke="#5b4313" stroke-width="1.8" />
+            <!-- Centre medallion -->
+            <circle cx="50" cy="50" r="10" fill="#1b2a4a" stroke="#f3dd8e" stroke-width="1.5" />
+            <circle cx="50" cy="50" r="4" fill="#c9a227" />
+        </svg>
+    </div> *@
+
+    <!-- Day / Time / Hebrew Date tablets -->
+    <table class="head">
+        <tr>
+            <td class="w-33">
+                <span class="tablet-corner-tl" aria-hidden="true"></span>
+                <span class="eyebrow">יום</span>
+                <b>@Day</b>
+            </td>
+
+            <td class="w-33">
+                <span class="tablet-corner-tl" aria-hidden="true"></span>
+                <span class="eyebrow">שעה</span>
+                <b>@TimeOnly.FromDateTime(DateTime.UtcNow)</b>
+            </td>
+
+            <td class="w-33">
+                <span class="tablet-corner-tl" aria-hidden="true"></span>
+                <span class="eyebrow">תאריך עברי</span>
+                <b>@MonthDay</b>
+            </td>
+        </tr>
+    </table>
+
 </header>
-<main>
 
-	@Body
+<main class="mt-4 mb-5 main-content">
+    <div class="menorah-divider">
+        <div class="divider-line"></div>
+        <div class="menorah-icon">
+            <svg width="38" height="28" viewBox="0 0 38 28" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" stroke="#c9a227" stroke-width="1.5" stroke-linecap="round">
+                    <!-- base -->
+                    <path d="M11 26 h16"></path>
+                    <path d="M19 26 v-6"></path>
+                    <!-- trunk -->
+                    <path d="M19 20 v-14"></path>
+                    <!-- arms -->
+                    <path d="M19 10 Q14 10 14 6"></path>
+                    <path d="M19 10 Q24 10 24 6"></path>
+                    <path d="M19 12 Q12 12 12 6"></path>
+                    <path d="M19 12 Q26 12 26 6"></path>
+                    <path d="M19 14 Q10 14 10 6"></path>
+                    <path d="M19 14 Q28 14 28 6"></path>
+                    <!-- flames -->
+                    <circle cx="10" cy="5" r="1.4" fill="#c9a227" stroke="none"></circle>
+                    <circle cx="12" cy="5" r="1.4" fill="#c9a227" stroke="none"></circle>
+                    <circle cx="14" cy="5" r="1.4" fill="#c9a227" stroke="none"></circle>
+                    <circle cx="19" cy="4" r="1.6" fill="#c9a227" stroke="none"></circle>
+                    <circle cx="24" cy="5" r="1.4" fill="#c9a227" stroke="none"></circle>
+                    <circle cx="26" cy="5" r="1.4" fill="#c9a227" stroke="none"></circle>
+                    <circle cx="28" cy="5" r="1.4" fill="#c9a227" stroke="none"></circle>
+                </g>
+            </svg>
+        </div>
+        <div class="divider-line"></div>
+    </div>
+    @Body
+    <div class="menorah-divider">
+        <div class="divider-line"></div>
+        <svg width="16" height="16" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" opacity=".65">
+            <g fill="#c9a227">
+                <polygon points="50,3 95,75 5,75"></polygon>
+                <polygon points="50,97 5,25 95,25"></polygon>
+            </g>
+        </svg>
+        <div class="divider-line"></div>
+    </div>
 </main>
-<footer class="bg-light w-100" style="position: fixed;left: 0;bottom: 0;">
-	<table class="w-100 footer-custom">
-		<tr>
-			@if (!String.IsNullOrEmpty(MauiProgram.Synagogue.Settings.Dedication))
-			{
-				<td class="text-center w-33">
-					<b>@MauiProgram.Synagogue.Settings.Dedication</b>
-				</td>
-			}
-			<td class="text-center w-33" style="font-family: system-ui !important; direction: ltr !important;">
-				☎️ 054-826-6522
-			</td>
-			<td class="text-center w-33" style="font-family: system-ui !important; direction: ltr !important;">
-				Ver: @VersionTracking.Default.CurrentVersion.@VersionTracking.Default.CurrentBuild
-			</td>
-		</tr>
-	</table>
 
+<footer>
+    <table class="footer-custom text-center">
+        <tr>
+            @if (!String.IsNullOrEmpty(MauiProgram.Synagogue.Settings.Dedication))
+            {
+                <td class="w-33 dedication">
+                    <b>@MauiProgram.Synagogue.Settings.Dedication</b>
+                </td>
+            }
+
+            <td class="w-33" style="direction: ltr;">
+                ☎️ 054‑826‑6522
+            </td>
+
+            <td class="w-33 version-label">
+                Ver: @VersionTracking.Default.CurrentVersion.@VersionTracking.Default.CurrentBuild
+            </td>
+        </tr>
+    </table>
 </footer>
 
 
-@code
-{
+@code {
 
-	public string? Time;
-	//public string? hc;
-	public string? Day;
-	public string? MonthDay;
+    public string? Day;
+    public string? MonthDay;
 
-	protected override void OnParametersSet()
-	{
-		DeviceDisplay.Current.KeepScreenOn = true;
-		System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("he-IL");
-		try
-		{
-			Day = (TimeOnly.FromDateTime(DateTime.Parse($"{MauiProgram.Calendar?.GetSunset()}").AddMinutes(13.5)) < TimeOnly.FromDateTime(DateTime.UtcNow)) ? culture.DateTimeFormat.GetDayName(DateTime.Today.AddDays(1).DayOfWeek).Replace("יום", "ליל") : culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
-		}
-		catch
-		{
-			Day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
-		}
-		culture.DateTimeFormat.Calendar = new HebrewCalendar();
-		MonthDay = DateTime.Now.ToString(culture.DateTimeFormat.MonthDayPattern, culture);
+    protected override void OnParametersSet()
+    {
+        DeviceDisplay.Current.KeepScreenOn = true;
 
-		// System.Globalization.HebrewCalendar HebCal = new System.Globalization.HebrewCalendar();
-		// int hebrewMonth = HebCal.GetMonth(DateTime.Today);
-		// bool isLeapYear = HebCal.IsLeapYear(HebCal.GetYear(DateTime.Today));
+        System.Globalization.CultureInfo culture =
+            new System.Globalization.CultureInfo("he-IL");
 
-		// Define month names, adjusting for leap year
-		// string[] hebrewMonths = isLeapYear ?
-		// 	new string[] { "", "תשרי", "חשוון", "כסלו", "טבת", "שבט", "אדר א", "אדר ב", "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול" } :
-		// 	new string[] { "", "תשרי", "חשוון", "כסלו", "טבת", "שבט", "אדר", "ניסן", "אייר", "סיוון", "תמוז", "אב", "אלול" };
+        // Determine current Hebrew day name, switching to "ליל" after sunset + 13.5 min
+        try
+        {
+            bool pastSunset = TimeOnly.FromDateTime(
+                DateTime.Parse($"{MauiProgram.Calendar?.GetSunset()}").AddMinutes(13.5)
+            ) < TimeOnly.FromDateTime(DateTime.UtcNow);
 
-		// Construct the date string
-		// hc = Gematriya.DoGematriya(HebCal.GetDayOfMonth(DateTime.Today)) + " ";
-		// if (hebrewMonth >= 1 && hebrewMonth < hebrewMonths.Length)
-		// {
-		// 	hc += hebrewMonths[hebrewMonth];
-		// }
-		// else
-		// {
-		// 	hc += "Unknown Month"; // Fallback for unexpected month values
-		// }
-	}
+            Day = pastSunset
+                ? culture.DateTimeFormat.GetDayName(DateTime.Today.AddDays(1).DayOfWeek)
+                                        .Replace("יום", "ליל")
+                : culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+        }
+        catch
+        {
+            Day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+        }
+
+        // Hebrew calendar date
+        culture.DateTimeFormat.Calendar = new HebrewCalendar();
+        MonthDay = DateTime.Now.ToString(culture.DateTimeFormat.MonthDayPattern, culture);
+    }
 
 }

@@ -33,7 +33,7 @@
 
 <table class="w-100 body">
 	<tr class="w-100" style="height: 60vmin;">
-		<td valign="top" class="rounded-4 shadow w-33 p-5">
+		<td valign="top" class="rounded-4 shadow w-33 p-5 content-card">
 			<p class="title">
 				<b>זמני היום:</b>
 				<hr />
@@ -107,7 +107,7 @@
 
 
 		</td>
-		<td valign="top" class="rounded-4 shadow w-33 m-auto p-0 justify-content-center overflow-hidden p-5" style="max-height: 60vmin">
+		<td valign="top" class="content-card rounded-4 shadow w-33 m-auto p-0 justify-content-center overflow-hidden p-5" style="max-height: 60vmin">
 			<div class="w-100 p-0 m-auto d-flex justify-content-center align-items-center scroll-table" style="max-height: 60vmin">
 				@* <p class="title">
 					<b>זמני התפילה:</b>
@@ -238,7 +238,7 @@
 
 			</div>
 		</td>
-		<td class="rounded-4 shadow w-33 p-5">
+		<td class="rounded-4 shadow w-33 p-5 content-card">
 			@try
 			{
 				@if (!String.IsNullOrEmpty(jewishCalendar?.GetParshah(DateTime.Today.AddDays(-1))))
