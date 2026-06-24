@@ -462,7 +462,7 @@
         {
             bool pastSunset = TimeOnly.FromDateTime(
                 DateTime.Parse($"{MauiProgram.Calendar?.GetSunset()}").AddMinutes(13.5)
-            ) < TimeOnly.FromDateTime(DateTime.UtcNow);
+            ) < TimeOnly.FromDateTime(DateTime.Now);
 
             Day = pastSunset
                 ? culture.DateTimeFormat.GetDayName(DateTime.Today.AddDays(1).DayOfWeek)
