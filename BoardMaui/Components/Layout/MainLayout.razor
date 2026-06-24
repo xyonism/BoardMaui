@@ -476,7 +476,7 @@
 
         // Hebrew calendar date
         culture.DateTimeFormat.Calendar = new HebrewCalendar();
-        MonthDay = DateTime.Now.ToString(culture.DateTimeFormat.MonthDayPattern, culture);
+        MonthDay = DateTime.Now.ToString("d בMMMM yyyy", culture);
     }
 
 }
