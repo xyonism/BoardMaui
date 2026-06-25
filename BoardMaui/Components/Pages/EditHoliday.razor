@@ -10,78 +10,56 @@
 		opacity: 1 !important;
 	}
 </style>
-<form>
-	<table class="w-100 body2">
-		<tr style="height: 60vmin;">
-			<td valign="top" class="rounded-4 shadow content-card">
-				<table class="w-100">
-					<tr>
-						<td class="w-33" valign="top">
-							<p class="minititle">
-								<b>עורך ימים מיוחדים</b>
-							</p>
-							<hr />
-							<table class="m-1 w-100">
-								<tr>
-									<td class="w-33">
-										שם יום
-									</td>
-									<td class="w-66">
-										<input type="text" @bind="MauiProgram.Synagogue.Settings.CurrentHoliday" />
-										<input value="שמור" type="button" @onclick="DatabaseUtility.SaveAll" />
-									</td>
-								</tr>
-								<tr>
-									<td class="w-33">
-										שם אירוע/תפילה
-									</td>
-									<td class="w-66">
-										<input type="text" @bind="holidayEvent" />
-									</td>
-								</tr>
-								<tr>
-									<td class="w-33">
-										זמן
-									</td>
-									<td class="w-66">
-										<input type="time" @bind="holidayEventTime" />
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<input value="הוסף" type="reset" @onclick="Add" />
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td class="w-66" valign="top">
-							<p class="minititle">
-								<b>רשימה</b>
-							</p>
-							<hr />
-							@foreach (var prayer in MauiProgram.Synagogue.HolidayPrays ?? [])
-							{
-								<table class="m-0 w-100">
-									<tr>
-										<td class="w-33">
-											@prayer.Title
-										</td>
-										<td class="w-33">
-											@prayer.Time
-										</td>
-										<td class="w-33">
-											<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.HolidayPrays, prayer)" />
-										</td>
-									</tr>
-								</table>
-								<hr />
-							}
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+<form class="container my-4">
+    <div class="content-card shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="card-title fw-bold">עורך ימים מיוחדים</h5>
+                    <hr />
+                    <div class="mb-3">
+                        <label class="form-label">שם יום</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" @bind="MauiProgram.Synagogue.Settings.CurrentHoliday" />
+                            <button type="button" class="btn btn-outline-primary" @onclick="DatabaseUtility.SaveAll">שמור</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">שם אירוע/תפילה</label>
+                        <input type="text" class="form-control" @bind="holidayEvent" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">זמן</label>
+                        <input type="time" class="form-control" @bind="holidayEventTime" />
+                    </div>
+
+                    <button type="reset" class="btn btn-primary w-100" @onclick="Add">הוסף</button>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <h5 class="card-title fw-bold">רשימה</h5>
+                    <hr />
+                    @foreach (var prayer in MauiProgram.Synagogue.HolidayPrays ?? [])
+                    {
+                        <div class="border rounded p-3 mb-2">
+                            <div class="row">
+                                <div class="col-md-5">@prayer.Title</div>
+                                <div class="col-md-4">@prayer.Time</div>
+                                <div class="col-md-3 text-end">
+                                    <button class="btn btn-danger btn-sm"
+                                            @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.HolidayPrays, prayer)">
+                                        הסר
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 @code

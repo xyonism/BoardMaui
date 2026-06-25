@@ -1,5 +1,4 @@
-﻿@using System.Text.Json;
-@using BoardMaui;
+﻿@using BoardMaui;
 @using BoardMaui.Extensions
 @using BoardMaui.Models;
 @inject DatabaseUtility DatabaseUtility;
@@ -10,89 +9,76 @@
 	}
 </style>
 
+<form class="container my-4">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="content-card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">עורך אירועים</h5>
+                    <hr />
 
-<form>
-	<table class="w-100 body2">
-		<tr style="height: 60vmin;">
-			<td valign="top" class="rounded-4 shadow content-card">
-				<table class="w-100">
-					<tr>
-						<td width="33%" valign="top">
-							<p class="minititle">
-								<b>עורך אירועים</b>
-							</p>
-							<hr />
-							<table class="w-100">
-								<tr>
-									<td class="w-25">כותרת:</td>
-									<td width="75%">
-										<input type="text" @bind="title" />
-									</td>
-								</tr>
-								<tr>
-									<td class="w-25">ימים:</td>
-									<td width="75%">
-										<input type="text" @bind="day" />
-									</td>
-								</tr>
-								<tr>
-									<td class="w-25">שעה:</td>
-									<td width="75%">
-										<input type="time" @bind="time" />
-									</td>
-								</tr>
-								<tr>
-									<td class="w-25">אירוע זמני:</td>
-									<td width="75%">
-										<input type="checkbox" @bind="expired">
-									</td>
-								</tr>
-								@if (expired)
-								{
-									<tr>
-										<td width="33%">תאריך תפוגה:</td>
-										<td class="w-66">
-											<input type="date" @bind="expirationdate" />
-										</td>
-									</tr>
-								}
-								<tr>
-									<td colspan="2">
-										<input value="הוסף" type="reset" @onclick="Add" />
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td class="w-66" valign="top">
-							<p class="minititle">
-								<b>רשימה</b>
-							</p>
-							<hr />
-							@foreach (var eventItem in MauiProgram.Synagogue.Events ?? Enumerable.Empty<Event>())
-							{
-								<table class="w-100">
-									<tr>
-										<td width="20%">כותרת: @eventItem.Title</td>
-										<td width="20%">ימים: @eventItem.Day</td>
-										<td width="20%">
-											שעה:
-											@eventItem.Time
-										</td>
-										<td width="20%">תאריך תפוגה: @eventItem.ExpirationDate</td>
-										<td width="20%">
-											<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.Events, eventItem)" />
-										</td>
-									</tr>
-								</table>
-								<hr />
-							}
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+                    <div class="mb-3">
+                        <label class="form-label">כותרת:</label>
+                        <input type="text" class="form-control" @bind="title" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">ימים:</label>
+                        <input type="text" class="form-control" @bind="day" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">שעה:</label>
+                        <input type="time" class="form-control" @bind="time" />
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" @bind="expired" id="expiredCheck" />
+                        <label class="form-check-label" for="expiredCheck">אירוע זמני</label>
+                    </div>
+
+                    @if (expired)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">תאריך תפוגה:</label>
+                            <input type="date" class="form-control" @bind="expirationdate" />
+                        </div>
+                    }
+
+                    <button type="reset" class="btn btn-primary w-100" @onclick="Add">הוסף</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 mb-3">
+            <div class="content-card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">רשימה</h5>
+                    <hr />
+
+                    @foreach (var eventItem in MauiProgram.Synagogue.Events ?? Enumerable.Empty<Event>())
+                    {
+                        <div class="border rounded p-3 mb-3">
+                            <div class="row text-center">
+                                <div class="col-md-3"><b>כותרת:</b> @eventItem.Title</div>
+                                <div class="col-md-3"><b>ימים:</b> @eventItem.Day</div>
+                                <div class="col-md-2"><b>שעה:</b> @eventItem.Time</div>
+                                <div class="col-md-2"><b>תאריך תפוגה:</b> @eventItem.ExpirationDate</div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-danger btn-sm"
+                                            @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.Events, eventItem)">
+                                        הסר
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
+
 
 @code {
 	string? title;

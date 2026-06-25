@@ -176,10 +176,6 @@ p {
 	border: 10px solid transparent;
 }
 
-.rounded-4, .rounded-3, .rounded-2, .rounded-1, .rounded-0, .rounded-5, .rounded, .rounded-pill {
-	background: rgba(248, 249, 250, 0.85) !important;
-}
-
 a, .btn-link {
 	color: black;
 	text-decoration: none;

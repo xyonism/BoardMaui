@@ -8,63 +8,47 @@
 		opacity: 1 !important;
 	}
 </style>
-<form>
-	<table class="w-100 body2">
-		<tr style="height: 60vmin;">
-			<td valign="top" class="rounded-4 shadow content-card">
-				<table class="w-100">
-					<tr>
-						<td class="w-33" valign="top">
-							<p class="minititle">
-								<b>עורך עילוי נשמות</b>
-							</p>
-							<hr />
-							<table class="w-100">
-								<tr>
-									<td class="w-25">שם:</td>
-									<td width="75%">
-										<input type="text" @bind="name" />
-									</td>
-								</tr>
-								<tr>
-									<td class="w-25">תאריך:</td>
-									<td width="75%">
-										<input type="text" @bind="date" />
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<input value="הוסף" type="reset" @onclick="Add" />
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td class="w-66" valign="top">
-							<p class="minititle">
-								<b>רשימה</b>
-							</p>
-							<hr />
-							@foreach (var person in MauiProgram.Synagogue.RIPs ?? [])
-							{
-								<table class="m-0 w-100">
-									<tr>
-										<td class="w-33">@person.Name</td>
-										<td class="w-33">@person.Date</td>
-										<td class="w-33">
-											<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.RIPs, person)" />
-										</td>
-									</tr>
-								</table>
-								<hr />
-							}
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-</form>
+<form class="container my-4">
+    <div class="content-card shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="card-title fw-bold">עורך עילוי נשמות</h5>
+                    <hr />
+                    <div class="mb-3">
+                        <label class="form-label">שם:</label>
+                        <input type="text" class="form-control" @bind="name" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">תאריך:</label>
+                        <input type="text" class="form-control" @bind="date" />
+                    </div>
+                    <button type="reset" class="btn btn-primary w-100" @onclick="Add">הוסף</button>
+                </div>
 
+                <div class="col-md-8 mb-3">
+                    <h5 class="card-title fw-bold">רשימה</h5>
+                    <hr />
+                    @foreach (var person in MauiProgram.Synagogue.RIPs ?? [])
+                    {
+                        <div class="border rounded p-3 mb-2">
+                            <div class="row">
+                                <div class="col-md-4 fw-bold">@person.Name</div>
+                                <div class="col-md-4">@person.Date</div>
+                                <div class="col-md-4 text-end">
+                                    <button class="btn btn-danger btn-sm"
+                                            @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.RIPs, person)">
+                                        הסר
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 @code
 {
 	string? name;

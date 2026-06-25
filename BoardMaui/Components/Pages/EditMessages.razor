@@ -11,61 +11,46 @@
 		opacity: 1 !important;
 	}
 </style>
-<form>
-	<table class="w-100 body2">
-		<tr style="height: 60vmin;">
-			<td valign="top" class="rounded-4 shadow content-card">
-				<table class="w-100">
-					<tr>
-						<td width="33%" valign="top">
-							<p class="minititle">
-								<b>עורך הודעות</b>
-							</p>
-							<hr />
-							<table class="w-100">
-								<tr>
-									<td class="w-25">כותרת:</td>
-									<td width="75%">
-										<input type="text" @bind="title" />
-									</td>
-								</tr>
-								<tr>
-									<td class="w-25">תוכן:</td>
-									<td width="75%">
-										<textarea cols="40" rows="10" @bind="message"></textarea>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<input value="הוסף" type="reset" @onclick="Add" />
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td class="w-66" valign="top">
-							<p class="minititle">
-								<b>רשימה</b>
-							</p>
-							<hr />
-							@foreach (var message in MauiProgram.Synagogue.Messages ?? [])
-							{
-								<table class="w-100">
-									<tr>
-										<td width="33%">@message.Title</td>
-										<td width="33%">@message.Body</td>
-										<td width="33%">
-											<input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.Messages, message)" />
-										</td>
-									</tr>
-								</table>
-								<hr />
-							}
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+<form class="container my-4">
+    <div class="content-card shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="card-title fw-bold">עורך הודעות</h5>
+                    <hr />
+                    <div class="mb-3">
+                        <label class="form-label">כותרת:</label>
+                        <input type="text" class="form-control" @bind="title" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">תוכן:</label>
+                        <textarea cols="40" rows="10" class="form-control" @bind="message"></textarea>
+                    </div>
+                    <button type="reset" class="btn btn-primary w-100" @onclick="Add">הוסף</button>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <h5 class="card-title fw-bold">רשימה</h5>
+                    <hr />
+                    @foreach (var message in MauiProgram.Synagogue.Messages ?? [])
+                    {
+                        <div class="border rounded p-3 mb-2">
+                            <div class="row">
+                                <div class="col-md-3 fw-bold">@message.Title</div>
+                                <div class="col-md-6">@message.Body</div>
+                                <div class="col-md-3 text-end">
+                                    <button class="btn btn-danger btn-sm"
+                                            @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.Messages, message)">
+                                        הסר
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 @code {

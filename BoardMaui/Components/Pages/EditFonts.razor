@@ -12,63 +12,51 @@
 		opacity: 1 !important;
 	}
 </style>
-<table class="w-100">
-	<tr style="height: 60vmin;">
-		<td valign="top" class="rounded-4 shadow content-card">
-			<p class="minititle">
-				<b>פונטים</b>
-			</p>
-			<hr />
-			<table class="w-100 body">
-				<tr>
-					<td>
-						עמוד ראשי:
-					</td>
-					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Home)]) /></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>תרומות:</td>
-					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Donations)]) /></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>הודעות:</td>
-					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Messages)]) /></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>אירועים:</td>
-					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Events)]) /></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>ימים מיוחדים:</td>
-					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Holiday)]) /></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>לוח תפילות:</td>
-					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(PraysBoard)]) /></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>עילוי נשמות:</td>
-					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(RIP)]) /></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>ברוכים הבאים:</td>
-					<td><input min="-10" max="10" type="number" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Welcome)]) /></td>
-					<td></td>
-				</tr>
-			</table>
-			</td>
-		</tr>
-	<tr>
-		<td colspan="3"><input value="שמור הכל" type="button" @onclick="SaveList" /></td>
-	</tr>
-</table>
+<div class="container my-4">
+    <div class="content-card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title fw-bold">פונטים</h5>
+            <hr />
+            <table class="table align-middle">
+                <tr>
+                    <td>עמוד ראשי:</td>
+                    <td><input min="-10" max="10" type="number" class="form-control" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Home)]) /></td>
+                </tr>
+                <tr>
+                    <td>תרומות:</td>
+                    <td><input min="-10" max="10" type="number" class="form-control" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Donations)]) /></td>
+                </tr>
+                <tr>
+                    <td>הודעות:</td>
+                    <td><input min="-10" max="10" type="number" class="form-control" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Messages)]) /></td>
+                </tr>
+                <tr>
+                    <td>אירועים:</td>
+                    <td><input min="-10" max="10" type="number" class="form-control" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Events)]) /></td>
+                </tr>
+                <tr>
+                    <td>ימים מיוחדים:</td>
+                    <td><input min="-10" max="10" type="number" class="form-control" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Holiday)]) /></td>
+                </tr>
+                <tr>
+                    <td>לוח תפילות:</td>
+                    <td><input min="-10" max="10" type="number" class="form-control" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(PraysBoard)]) /></td>
+                </tr>
+                <tr>
+                    <td>עילוי נשמות:</td>
+                    <td><input min="-10" max="10" type="number" class="form-control" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(RIP)]) /></td>
+                </tr>
+                <tr>
+                    <td>ברוכים הבאים:</td>
+                    <td><input min="-10" max="10" type="number" class="form-control" @bind=@(MauiProgram.Synagogue.Settings.FontSize[nameof(Welcome)]) /></td>
+                </tr>
+            </table>
+            <div class="text-end">
+                <button class="btn btn-success" @onclick="SaveList">שמור הכל</button>
+            </div>
+        </div>
+    </div>
+</div>
 @code {
 	protected override void OnInitialized()
 	{

@@ -11,73 +11,66 @@
         opacity: 1 !important;
     }
 </style>
-<form>
-    <table class="w-100 body2">
-        <tr style="height: 60vmin;">
-            <td valign="top" class="rounded-4 shadow content-card">
-                <table class="w-100">
-                    <tr>
-                        <td class="w-33" valign="top">
-                            <p class="minititle">
-                                <b>עורך תרומות</b>
-                            </p>
-                            <hr />
-                            <table class="m-auto">
-                                <tr>
-                                    <td class="w-33">שם:</td>
-                                    <td class="w-66">
-                                        <input type="text" @bind="name" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="w-33">תרומה:</td>
-                                    <td class="w-66">
-                                        <input type="number" @bind="donation" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="w-33">שולם:</td>
-                                    <td class="w-66">
-                                        <input type="number" @bind="paid" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="w-33">נשאר לתשלום:</td>
-                                    <td class="w-66">@(donation - paid)</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <input value="הוסף" type="reset" @onclick="Add" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td class="w-66" valign="top">
-                            <p class="minititle">
-                                <b>רשימה</b>
-                            </p>
-                            <hr />
-                            @foreach (var donation in MauiProgram.Synagogue.Donations ?? Enumerable.Empty<Donation>())
-                            {
-                                <table>
-                                    <tr>
-                                        <td width="20%">שם: @donation.Name</td>
-                                        <td width="20%">תרומה: @donation.Dontation</td>
-                                        <td width="20%">שולם: @donation.Paid</td>
-                                        <td width="20%">נשאר לשלם: @(donation.Dontation - donation.Paid)</td>
-                                        <td width="20%">
-                                            <input value="הסר" type="button" @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.Donations, donation)" />
-                                        </td>
-                                    </tr>
-                                </table>
-                                <hr />
-                            }
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+<form class="container my-4">
+    <div class="content-card shadow-sm">
+        <div class="card-body">
+            <div class="row">
+
+                <!-- עורך תרומות -->
+                <div class="col-md-4 mb-3">
+                    <h5 class="card-title fw-bold">עורך תרומות</h5>
+                    <hr />
+
+                    <div class="mb-3">
+                        <label class="form-label">שם:</label>
+                        <input type="text" class="form-control" @bind="name" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">תרומה:</label>
+                        <input type="number" class="form-control" @bind="donation" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">שולם:</label>
+                        <input type="number" class="form-control" @bind="paid" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">נשאר לתשלום:</label>
+                        <div class="form-control bg-light">@((donation - paid))</div>
+                    </div>
+
+                    <button type="reset" class="btn btn-primary w-100" @onclick="Add">הוסף</button>
+                </div>
+
+                <!-- רשימת תרומות -->
+                <div class="col-md-8 mb-3">
+                    <h5 class="card-title fw-bold">רשימה</h5>
+                    <hr />
+
+                    @foreach (var donation in MauiProgram.Synagogue.Donations ?? Enumerable.Empty<Donation>())
+                    {
+                        <div class="border rounded p-3 mb-2">
+                            <div class="row text-center">
+                                <div class="col-md-3"><b>שם:</b> @donation.Name</div>
+                                <div class="col-md-2"><b>תרומה:</b> @donation.Dontation</div>
+                                <div class="col-md-2"><b>שולם:</b> @donation.Paid</div>
+                                <div class="col-md-3"><b>נשאר:</b> @(donation.Dontation - donation.Paid)</div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-danger btn-sm"
+                                            @onclick="async x => await DatabaseUtility.RemoveFromList(MauiProgram.Synagogue.Donations, donation)">
+                                        הסר
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
 </form>
 
 @code {
