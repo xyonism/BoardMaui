@@ -1,16 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
-
-		<!-- Note for MacCatalyst:
-      The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-      When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-      The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-      either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
-		<TargetFrameworks>net10.0-android</TargetFrameworks>
+		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+		<TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>BoardMaui</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -18,64 +11,60 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
 		<Nullable>enable</Nullable>
-
-		<!-- Display name -->
 		<ApplicationTitle>BoardMaui</ApplicationTitle>
-
-		<!-- App Identifier -->
 		<ApplicationId>com.companyname.BoardMaui</ApplicationId>
-
-		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>3.3</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
+		<WindowsPackageType>None</WindowsPackageType>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.1</SupportedOSPlatformVersion>
+		<AndroidSigningKeyStore>1.keystore</AndroidSigningKeyStore>
+		<AndroidKeyStore>True</AndroidKeyStore>
+		<AndroidSigningStorePass>111111</AndroidSigningStorePass>
+		<AndroidSigningKeyAlias>1</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass>111111</AndroidSigningKeyPass>
+		<UseXamlCompiler>true</UseXamlCompiler>
+		<XamlGenerateSource>true</XamlGenerateSource>
+		<XamlEnableCompiledBindings>true</XamlEnableCompiledBindings>
 
-		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
-
-
-	
-		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-		<GenerateTestArtifacts>True</GenerateTestArtifacts>
-		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-
+		<AndroidStoreUncompressed>true</AndroidStoreUncompressed>
 		<EnableCompressionInSingleFile>false</EnableCompressionInSingleFile>
-		<Optimization>false</Optimization>
 		<RunAOTCompilation>false</RunAOTCompilation>
-		<Optimize>false</Optimize>
-		<TieredCompilation>false</TieredCompilation>
-		<EnableTrimAnalyzer>false</EnableTrimAnalyzer>
-		<PublishReadyToRun>false</PublishReadyToRun>
-		<EnableTrimAnalysis>false</EnableTrimAnalysis>
-		<PublishTrimmed>false</PublishTrimmed>
-		<TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+
 		<CompressionEnabled>false</CompressionEnabled>
 		<EnableLLVM>false</EnableLLVM>
-		<PublishAot>false</PublishAot>
-		<IsAotCompatible>false</IsAotCompatible>
-		<IsTrimmable>false</IsTrimmable>
-		<EnableTrimAnalyzer>false</EnableTrimAnalyzer>
-		<EnableSingleFileAnalyzer>false</EnableSingleFileAnalyzer>
-		<EnableAotAnalyzer>false</EnableAotAnalyzer>
+
 		<CetCompat>false</CetCompat>
-		<RazorCompileOnBuild>true</RazorCompileOnBuild>
-		<RazorCompileOnPublish>true</RazorCompileOnPublish>
-		<UseRazorSourceGenerator>true</UseRazorSourceGenerator>
+		<AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+		<Deterministic>true</Deterministic>
+		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">29.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.1</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.1</TargetPlatformMinVersion>
-
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<UseMonoRuntime Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'ios'">false</UseMonoRuntime>
+		<MonoSymbolArchive>false</MonoSymbolArchive>
+		<IsTrimmable>false</IsTrimmable>
+		<IsAotCompatible>false</IsAotCompatible>
+		<PublishAot>False</PublishAot>
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<EnableSingleFileAnalyzer>false</EnableSingleFileAnalyzer>
+		<TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+		<EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+		<EnableAotAnalyzer>false</EnableAotAnalyzer>
+		<TieredCompilation>false</TieredCompilation>
+		<Optimize>false</Optimize>
+		<Optimization>false</Optimization>
+		<EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+		<OutputPath>bin\Release</OutputPath>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
-	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<OutputPath>bin\Debug</OutputPath>
+		<EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
+		<UseInterpreter>true</UseInterpreter>
 
-	<PropertyGroup>
-	  <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.26100.0</TargetFrameworks>
-	  <PackageCertificateThumbprint>65507BCE734B8F30C651AD6E8FBEB9426E5D4B4C</PackageCertificateThumbprint>
+
 	</PropertyGroup>
 
 
