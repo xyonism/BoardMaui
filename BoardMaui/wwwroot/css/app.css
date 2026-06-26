@@ -646,3 +646,311 @@ body {
 		border-top: 1px solid var(--gold);
 		border-bottom: 1px solid var(--gold);
 	}
+
+
+
+
+/* ── CSS VARIABLES ── */
+:root {
+	--ink: #2b1b0f;
+	--parchment: #fbf3dc;
+	--parchment-mid: #f5eac8;
+	--parchment-deep: #f0e0b0;
+	--gold: #c9a227;
+	--gold-light: #e8d28a;
+	--gold-pale: #fdf4d0;
+	--gold-deep: #8a6b1f;
+	--navy: #1b2a4a;
+	--wine: #6e1423;
+	--font-display: 'Frank Ruhl Libre', Georgia, 'Times New Roman', serif;
+	--font-script: 'David Libre', Georgia, serif;
+	--font-utility: 'Inter', system-ui, sans-serif;
+}
+
+/* ── GLOBAL ── */
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: var(--parchment);
+	background-attachment: fixed;
+	color: var(--ink);
+	font-family: var(--font-utility);
+	margin: 0;
+	padding: 0;
+}
+
+	/* Hexagram lattice watermark behind everything */
+	body::before {
+		content: "";
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+		opacity: .07;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23c9a227' stroke-width='2'%3E%3Cpolygon points='50,3 95,75 5,75'/%3E%3Cpolygon points='50,97 5,25 95,25'/%3E%3C/g%3E%3C/svg%3E");
+		background-size: 90px 90px;
+	}
+
+/* ── HEADER ── */
+header {
+	position: relative;
+	background: linear-gradient(180deg, #fdf6e3 0%, var(--parchment-deep) 100%);
+	border-top: 5px solid var(--gold);
+	border-bottom: 4px double var(--gold);
+	box-shadow: 0 4px 24px rgba(0,0,0,0.22), inset 0 -1px 0 var(--gold-light);
+	padding: 2.5vmin 3vmin 1.5vmin;
+	z-index: 10;
+}
+
+	/* Inner cornice line below the thick border */
+	header::before {
+		content: "";
+		position: absolute;
+		left: 3vmin;
+		right: 3vmin;
+		top: 7px;
+		height: 1px;
+		background: var(--gold-light);
+		opacity: 0.55;
+	}
+
+	/* Second cornice line below header */
+	header::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -7px;
+		height: 2px;
+		background: var(--gold-light);
+		opacity: 0.45;
+	}
+
+/* ── CORNER ROSETTES ── */
+.corner-rosette {
+	position: absolute;
+	width: 3.2vmin;
+	height: 3.2vmin;
+	top: 10px;
+	z-index: 2;
+}
+
+	.corner-rosette.left {
+		left: 10px;
+	}
+
+	.corner-rosette.right {
+		right: 10px;
+		transform: scaleX(-1);
+	}
+
+/* ── STAR OF DAVID CREST ── */
+.crest-wrap {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 1.5vmin;
+}
+
+.crest {
+	width: 7vmin;
+	height: 7vmin;
+	filter: drop-shadow(0 0 8px rgba(201,162,39,0.6));
+	animation: nerTamidGlow 3.4s ease-in-out infinite;
+}
+
+@@keyframes nerTamidGlow {
+	0%, 100% {
+		filter: drop-shadow(0 0 5px rgba(201,162,39,0.45));
+	}
+
+	50% {
+		filter: drop-shadow(0 0 14px rgba(201,162,39,0.9));
+	}
+}
+
+@@media (prefers-reduced-motion: reduce) {
+	.crest {
+		animation: none;
+	}
+}
+
+/* ── HEADER TABLETS TABLE ── */
+.head {
+	width: 100%;
+	margin: 0 auto;
+	border-collapse: separate;
+	border-spacing: 2vmin 0;
+}
+
+	.head > tr > td {
+		position: relative;
+
+		padding: 1.2vmin 1vmin;
+		text-align: center;
+		font-family: var(--font-display);
+		/* parchment tablet gradient */
+		background: linear-gradient(160deg, #fdf8ec, var(--parchment-mid));
+		/* arched top, flat bottom – like stone tablets */
+		border: 2px solid var(--gold);
+		border-radius: 42% 42% 6px 6px / 60% 60% 6px 6px;
+		color: var(--navy);
+		text-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 -1px 0 rgba(0,0,0,0.12);
+		box-shadow: 0 5px 14px rgba(0,0,0,0.18), inset 0 0 0 1px var(--gold-light), inset 0 2px 4px rgba(255,255,255,0.65);
+	}
+
+		/* Inner halo ring */
+		.head > tr > td::before {
+			content: "";
+			position: absolute;
+			inset: 5px;
+			border-radius: inherit;
+			border: 1px solid rgba(201,162,39,0.22);
+			pointer-events: none;
+		}
+
+		/* Illuminated corner brackets */
+		.head > tr > td::after {
+			content: "";
+			position: absolute;
+			top: 8px;
+			right: 8px;
+			width: 1.3vmin;
+			height: 1.3vmin;
+			border: 1.5px solid var(--gold);
+			border-left: none;
+			border-bottom: none;
+			opacity: .7;
+		}
+
+.tablet-corner-tl {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	width: 1.3vmin;
+	height: 1.3vmin;
+	border: 1.5px solid var(--gold);
+	border-right: none;
+	border-bottom: none;
+	opacity: .7;
+}
+
+.head td b {
+	letter-spacing: 0.08vmin;
+	display: block;
+	font-weight: 700;
+}
+
+.eyebrow {
+	display: block;
+	font-family: var(--font-utility);
+	font-size: 1.4vmin;
+	font-weight: 600;
+	letter-spacing: 0.28vmin;
+	text-transform: uppercase;
+	color: var(--gold-deep);
+	text-shadow: none;
+	margin-bottom: 0.3vmin;
+}
+
+/* ── MENORAH ORNAMENT DIVIDER ── */
+.menorah-divider {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.8rem 2rem;
+}
+
+.divider-rule {
+	flex: 1;
+	height: 1px;
+	background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+/* ── MAIN CONTENT ── */
+main {
+	position: relative;
+	z-index: 1;
+	padding: 0 1rem;
+}
+
+/* ── FOOTER ── */
+footer {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: linear-gradient(0deg, #fdf6e3 0%, var(--parchment-deep) 100%);
+	border-top: 4px double var(--gold);
+	box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
+	z-index: 30;
+}
+
+	/* Cornice line above the thick footer border */
+	footer::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: -7px;
+		height: 2px;
+		background: var(--gold-light);
+		opacity: 0.45;
+	}
+
+/* ── FOOTER TABLE ── */
+.footer-custom {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+	.footer-custom td {
+		position: relative;
+		text-align: center;
+		padding: 0.75vmin 1.2vmin;
+		font-family: var(--font-utility);
+		font-size: 1.4vmin;
+		color: var(--ink);
+		border-right: 1px solid var(--gold);
+	}
+
+		.footer-custom td:last-child {
+			border-right: none;
+		}
+
+		/* Magen David star at each cell seam */
+		.footer-custom td:not(:first-child)::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: -1px;
+			width: 12px;
+			height: 12px;
+			transform: translate(-50%, -50%);
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23c9a227'%3E%3Cpolygon points='50,3 95,75 5,75'/%3E%3Cpolygon points='50,97 5,25 95,25'/%3E%3C/g%3E%3C/svg%3E");
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
+
+/* ── DEDICATION PLAQUE ── */
+.dedication {
+	font-size: 2.2vmin;
+	font-family: var(--font-script);
+	font-style: italic;
+	color: var(--wine);
+	text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+}
+
+	.dedication b {
+		padding: 0 0.6em;
+		border-top: 1px solid var(--gold);
+		border-bottom: 1px solid var(--gold);
+	}
+
+/* ── VERSION LABEL ── */
+.version-label {
+	font-size: 1.4vmin;
+	color: var(--gold-deep);
+	direction: ltr;
+}
