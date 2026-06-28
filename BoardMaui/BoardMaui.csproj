@@ -16,7 +16,7 @@
 
     <!-- App Info -->
     <ApplicationTitle>BoardMaui</ApplicationTitle>
-    <ApplicationId>com.companyname.BoardMaui</ApplicationId>
+    <ApplicationId>com.xyonism.BoardMaui</ApplicationId>
     <ApplicationVersion>1</ApplicationVersion>
 
     <!-- Windows Platform Versions -->
@@ -40,13 +40,14 @@
     <XamlGenerateSource>true</XamlGenerateSource>
     <XamlEnableCompiledBindings>true</XamlEnableCompiledBindings>
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
-    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>False</GenerateTestArtifacts>
-    <AppInstallerUri>C:\BoardMauiInstaller</AppInstallerUri>
+    <AppInstallerUri>C:\BoardMaui</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <PackageCertificateThumbprint>502184A16AD428C88E6CB26F7ECACA305B001A05</PackageCertificateThumbprint>
   </PropertyGroup>
 
   <!-- Release -->
