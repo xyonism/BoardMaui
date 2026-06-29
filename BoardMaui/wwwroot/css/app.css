@@ -10,10 +10,6 @@
 .menu {
 	transition: transform 0.3s ease-in-out; /* Smooth transition for showing/hiding */
 }
-
-.w-20 {
-	width: 20% !important;
-}
 /* Initially hide the menu by translating it off-screen */
 .menu-container .menu {
 	transform: translateY(-100%); /* For a top menu */
@@ -25,7 +21,7 @@
 /* Show the menu on hover */
 .menu-container:hover .menu {
 	transform: translateY(0); /* Bring it back into view */
-	background-color: rgba(255, 255, 255, 0.9);
+	background: var(--navy);
 }
 
 
@@ -48,20 +44,8 @@
 
 
 
-/* Optional: Style individual menu items */
-.menu td a {
-	/*	display: block;*/
-	/*	padding: 15px 20px;*/
-	/*	color: white;*/
-	/*	text-decoration: none;*/
-}
-
-	.menu td a:hover {
-		/*		background-color: #555;*/
-	}
-
 .minititle {
-	padding-top: 1vmin;
+	padding: 1vmin;
 }
 
 
@@ -88,10 +72,6 @@ header, main {
 }
 
 
-.body {
-	border-spacing: 4.5vmin;
-}
-
 td > table {
 	border-spacing: 0px;
 }
@@ -101,7 +81,7 @@ td > * > table {
 }
 
 p {
-	margin-bottom: 1vmin;
+	margin: 1vmin;
 }
 
 
@@ -121,59 +101,12 @@ p {
 	line-height: 1.15 !important;
 }
 
-.menu-container {
-	/* Position the menu container where you want it */
-	/*position: fixed;*/ /* Or absolute, relative depending on your layout */
-	top: 0;
-	left: 0;
-	width: 100%; /* Or a specific width */
-	z-index: 1000; /* Ensure it's above other content */
-	overflow: hidden; /* Important for hiding content outside */
-}
-
 .w-33 {
 	width: calc(100% / 3) !important;
 }
 
 .w-66 {
 	width: calc(100% / 3 * 2) !important;
-}
-
-.menu {
-	/*	list-style: none;*/
-	transition: transform 0.3s ease-in-out; /* Smooth transition for showing/hiding */
-}
-
-/* Initially hide the menu by translating it off-screen */
-.menu-container .menu {
-	transform: translateY(-100%); /* For a top menu */
-	/* Or translateX(-100%) for a left menu */
-	/* Or translateY(100%) for a bottom menu */
-	/* Or translateX(100%) for a right menu */
-}
-
-/* Show the menu on hover */
-.menu-container:hover .menu {
-	transform: translateY(0); /* Bring it back into view */
-}
-
-
-
-
-.circle {
-	background-color: rgba(255, 255, 255, 0.9);
-	border-radius: 100%;
-	background-size: 100% 100%;
-	box-shadow: 2vmin 2vmin 2vmin 0px rgba(0,0,0,0.75);
-	border: 2vmin solid transparent;
-}
-
-.square {
-	background-color: rgba(255, 255, 255, 0.9);
-	border-radius: 9vmin;
-	background-size: 100% 100%;
-	box-shadow: 0 0.9vmin 1.8vmin rgba(0, 0, 0, 0.15);
-	border: 2vmin solid transparent;
 }
 
 a, .btn-link {
@@ -196,7 +129,7 @@ a, .btn-link {
 }
 
 .content {
-	padding-top: 2vmin;
+	padding: 2vmin;
 }
 
 h1:focus {
@@ -231,7 +164,7 @@ h1:focus {
 		cursor: pointer;
 		position: absolute;
 		right: 1.4vmin;
-		top: 0.9vmin;
+		top: 1vmin;
 	}
 
 .blazor-error-boundary {
@@ -314,68 +247,6 @@ body {
 	}
 
 /* ── HEADER ── */
-.app-header {
-	position: relative;
-	background: linear-gradient(180deg, #fdf6e3 0%, var(--parchment-deep) 100%);
-	border-top: 0.9vmin solid var(--gold);
-	border-bottom: 0.7vmin double var(--gold);
-	box-shadow: 0 0.7vmin 4.4vmin rgba(0,0,0,0.22), inset 0 -0.2vmin 0 var(--gold-light);
-	padding: 2.5vmin 2vmin 1.5vmin;
-	z-index: 10;
-}
-
-	/* double-rule cornice lines */
-	.app-header::before {
-		content: "";
-		position: absolute;
-		left: 2vmin;
-		right: 2vmin;
-		top: 1.3vmin;
-		height: 0.2vmin;
-		background: var(--gold-light);
-		opacity: 0.6;
-	}
-
-	.app-header::after {
-		content: "";
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: -1.3vmin;
-		height: 0.4vmin;
-		background: var(--gold-light);
-	}
-
-/* corner rosettes */
-.corner {
-	position: absolute;
-	width: 5.1vmin;
-	height: 5.1vmin;
-}
-
-	.corner svg {
-		width: 100%;
-		height: 100%;
-	}
-
-	.corner.tl {
-		top: 1.5vmin;
-		left: 1.5vmin;
-	}
-
-	.corner.tr {
-		top: 1.5vmin;
-		right: 1.5vmin;
-		transform: scaleX(-1);
-	}
-
-/* ── CREST ── */
-.crest-wrap {
-	display: flex;
-	justify-content: center;
-	margin-bottom: 1.5vmin;
-}
-
 .crest-svg {
 	width: 9.5vmin;
 	height: 9.5vmin;
@@ -406,7 +277,7 @@ body {
 		content: "";
 		position: absolute;
 		inset: 0.7vmin;
-		bborder-radius: inherit;
+		border-radius: inherit;
 		border: 0.2vmin solid rgba(201,162,39,0.25);
 		pointer-events: none;
 	}
@@ -442,7 +313,7 @@ body {
 	letter-spacing: 0.25vmin;
 	color: var(--gold-deep);
 	text-transform: uppercase;
-	margin-bottom: 0.3vmin;
+	margin: 0.3vmin;
 }
 
 .tablet-value {
@@ -557,48 +428,6 @@ body {
 		border-bottom: none;
 	}
 
-.content-title {
-	font-family: var(--font-display);
-	font-size: 2.4vmin;
-	font-weight: 700;
-	color: var(--navy);
-	text-align: center;
-	margin-bottom: 1.8vmin;
-	padding-bottom: 1.1vmin;
-	border-bottom: 0.2vmin solid var(--gold-light);
-}
-
-.content-text {
-	font-family: var(--font-script);
-	font-size: 2.2vmin;
-	line-height: 1.8;
-	color: var(--ink);
-	text-align: right;
-	direction: rtl;
-}
-
-/* ── FOOTER ── */
-.app-footer {
-	position: fixed;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: linear-gradient(0deg, #fdf6e3, var(--parchment-deep));
-	border-top: 0.7vmin double var(--gold);
-	box-shadow: 0 -0.7vmin 3.6vmin rgba(0,0,0,0.18);
-	z-index: 20;
-}
-
-	.app-footer::after {
-		content: "";
-		position: absolute;
-		top: -1.3vmin;
-		left: 0;
-		right: 0;
-		height: 0.4vmin;
-		background: var(--gold-light);
-	}
-
 .footer-inner {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
@@ -641,9 +470,9 @@ body {
 }
 
 	.dedication b {
-		padding: 0 1.1vmin;
-		border-top: 0.2vmin solid var(--gold);
-		border-bottom: 0.2vmin solid var(--gold);
+		padding: 1vmin;
+		border-top: 0.1vmin solid var(--gold);
+		border-bottom: 0.1vmin solid var(--gold);
 	}
 
 
@@ -696,10 +525,10 @@ body {
 header {
 	position: relative;
 	background: linear-gradient(180deg, #fdf6e3 0%, var(--parchment-deep) 100%);
-	border-top: 0.9vmin solid var(--gold);
-	border-bottom: 0.7vmin double var(--gold);
+	
+	border-bottom: 0.1vmin solid var(--gold);
 	box-shadow: 0 0.7vmin 4.4vmin rgba(0,0,0,0.22), inset 0 -0.2vmin 0 var(--gold-light);
-	padding: 2vmin;
+	padding: 1.5vmin;
 	z-index: 10;
 }
 
@@ -746,12 +575,6 @@ header {
 	}
 
 /* ── STAR OF DAVID CREST ── */
-.crest-wrap {
-	display: flex;
-	justify-content: center;
-	margin-bottom: 1.5vmin;
-}
-
 .crest {
 	width: 7vmin;
 	height: 7vmin;
@@ -759,7 +582,7 @@ header {
 	animation: nerTamidGlow 3.4s ease-in-out infinite;
 }
 
-@@keyframes nerTamidGlow {
+@keyframes nerTamidGlow {
 	0%, 100% {
 		filter: drop-shadow(0 0 0.9vmin rgba(201,162,39,0.45));
 	}
@@ -769,7 +592,7 @@ header {
 	}
 }
 
-@@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
 	.crest {
 		animation: none;
 	}
@@ -849,7 +672,7 @@ header {
 	text-transform: uppercase;
 	color: var(--gold-deep);
 	text-shadow: none;
-	margin-bottom: 0.3vmin;
+	margin: 0.3vmin;
 }
 
 /* ── MENORAH ORNAMENT DIVIDER ── */
@@ -880,7 +703,7 @@ footer {
 	right: 0;
 	bottom: 0;
 	background: linear-gradient(0deg, #fdf6e3 0%, var(--parchment-deep) 100%);
-	border-top: 0.7vmin double var(--gold);
+	border-top: 0.1vmin solid var(--gold);
 	box-shadow: 0 -0.7vmin 3.6vmin rgba(0,0,0,0.18);
 	z-index: 30;
 }
@@ -942,8 +765,8 @@ footer {
 
 	.dedication b {
 		padding: 0 1.1vmin;
-		border-top: 0.2vmin solid var(--gold);
-		border-bottom: 0.2vmin solid var(--gold);
+		border-top: 0.1vmin solid var(--gold);
+		border-bottom: 0.1vmin solid var(--gold);
 	}
 
 /* ── VERSION LABEL ── */
