@@ -16,7 +16,6 @@ public partial class App : MauiWinUIApplication
     /// </summary>
     public App() => InitializeComponent();
 
-    [Obsolete]
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp()
             .ConfigureLifecycleEvents(
             events => events.AddWindows(
